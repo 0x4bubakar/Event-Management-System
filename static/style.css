@@ -1,0 +1,74 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body,
+html {
+  height: 100%;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+nav ul {
+  display: flex;
+  gap: 1em;
+  list-style: none;
+  margin: 0;
+}
+
+nav ul li a {
+  text-decoration: none;
+  color: black;
+}
+
+#hero-container {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+    url(//upload.wikimedia.org/wikipedia/commons/1/19/Clifton_Suspension_Bridge_and_the_Observatory_in_Bristol%2C_England.jpg);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  height: 60vh;
+  padding: 0 4rem;
+  color: white;
+}
+
+#hero-left {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  max-width: 40%;
+}
+
+#hero-text h2 {
+  font-size: clamp(2rem, 2vw, 3rem);
+}
+
+#hero-text p {
+  font-size: 1.25rem;
+  line-height: 1.5;
+}
+
+.search form input {
+  padding: 0.5rem 1rem;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  border-radius: 10px;
+}
+
+#search #hint {
+  font-size: 0.9rem;
+  opacity: 0.8;
+}

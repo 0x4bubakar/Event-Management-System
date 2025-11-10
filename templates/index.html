@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+    <title>BCE Events</title>
+  </head>
+  <body>
+    <header>
+      <h1>BCE Events</h1>
+      <nav>
+        <ul>
+          <li><a href="{{ url_for('index') }}">Home</a></li>
+          <li><a href="{{ url_for('login') }}">Login/Sign Up</a></li>
+          <li><a href="{{ url_for('events') }}">Events</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <section id="hero-container">
+      <div id="hero-left">
+        <div id="hero-text">
+          <h2>Discover what's happening in Bristol</h2>
+          <p>
+            Your next night out starts here - find matches, workshops, meetups,
+            and hidden gems around the city.
+          </p>
+        </div>
+        <div class="search">
+          <form>
+            <input
+              type="text"
+              placeholder="Where would you like to go?"
+              size="30"
+            />
+          </form>
+          <p id="hint">
+            <i>Try: "street food", "tech meetup", "open mic"</i>
+          </p>
+        </div>
+      </div>
+    </section>
+  </body>
+</html>
