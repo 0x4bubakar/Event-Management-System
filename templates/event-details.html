@@ -1,0 +1,32 @@
+{% extends "layout.html" %} {% block styles %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='event-details.css') }}"
+/>
+{% endblock %} {% block title %} {{ event.title }} | Bristol Community Events {%
+endblock %} {% block body %}
+
+<div class="event-container">
+  <img class="banner" src="{{ event.image }}" alt="{{ event.title }}" />
+
+  <h1 class="title">{{ event.title }}</h1>
+
+  <div class="details">
+    <p><strong>Date:</strong> {{ event.date }}</p>
+    <p><strong>Price:</strong> {{ event.price }}</p>
+    <p><strong>Venue:</strong> {{ event.venue }}</p>
+
+    {% if event.conditions %}
+    <p><strong>Conditions:</strong> {{ event.conditions }}</p>
+    {% endif %}
+
+    <p><strong>Tickets Left:</strong> {{ event.tickets_left }}</p>
+    <p><strong>Booking Deadline:</strong> {{ event.deadline }}</p>
+  </div>
+
+  <p class="desc">{{ event.description }}</p>
+
+  <a href="{{ url_for('login') }}" class="book-btn">Book Now</a>
+</div>
+
+{% endblock %}

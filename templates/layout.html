@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+    {% block styles %}{% endblock %}
+    <title>{% block title %}{% endblock %}</title>
+  </head>
+  <body>
+    <header>
+      <h1><a style="text-decoration: none; color: black;" href="{{ url_for('index') }}">Bristol Community Events</a></h1>
+      <button id="menu-btn">☰</button>
+      <nav id="nav-menu">
+        <ul>
+          <li><a href="{{ url_for('index') }}">Home</a></li>
+          <li><a href="{{ url_for('login') }}">Login/Sign Up</a></li>
+          <li><a href="{{ url_for('events') }}">Events</a></li>
+        </ul>
+      </nav>
+    </header>
+    {% block body %} {% endblock%}
+    <script>
+      const menuToggle = document.getElementById("menu-btn");
+      const navMenu = document.getElementById("nav-menu");
+
+      menuToggle.addEventListener("click", () => {
+        navMenu.classList.toggle("open");
+      });
+    </script>
+    {% block scripts %} {% endblock %}
+  </body>
+</html>

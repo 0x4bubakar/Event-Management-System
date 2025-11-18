@@ -1,0 +1,82 @@
+{% extends "layout.html" %} {% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='events.css') }}" />
+{% endblock %} {% block title %} Events | Bristol Community Events {% endblock
+%} {% block body %}
+
+<div class="events-container">
+  <!-- Search / Filters -->
+  <div class="filters">
+    <input
+      type="text"
+      class="search-bar"
+      placeholder="Search events (pseudo)"
+    />
+    <div class="categories">
+      <a href="{{ url_for('category', name='music') }}">Music</a>
+      <a href="{{ url_for('category', name='food') }}">Food</a>
+      <a href="{{ url_for('category', name='sports') }}">Sports</a>
+      <a href="{{ url_for('category', name='tech') }}">Tech</a>
+    </div>
+  </div>
+
+  <h2>Upcoming Events</h2>
+  <div class="events-grid">
+    <!-- Event Card 1 -->
+    <a class="event-card" href="{{ url_for('event_details', event_id=1) }}">
+      <img
+        src="https://upload.wikimedia.org/wikipedia/commons/7/7d/Ashton_Gate_-_Lansdown_Stand.jpg"
+        alt="Ashton Gate Stadium"
+      />
+      <div class="info">
+        <h3>Bristol City vs Bristol Rovers</h3>
+        <p>18/12/2025· £20-£79 · Ashton Gate Stadium</p>
+      </div>
+    </a>
+
+    <!-- Event Card 2 -->
+    <a class="event-card" href="{{ url_for('event_details', event_id=2) }}">
+      <img
+        src="https://static.wixstatic.com/media/baa13f_ca703cdeae914522bae2e03f190c8857~mv2.png/v1/fit/w_2500,h_1330,al_c/baa13f_ca703cdeae914522bae2e03f190c8857~mv2.png"
+        alt="BSides Bristol Logo"
+      />
+      <div class="info">
+        <h3>BSides Bristol 2026</h3>
+        <p>01/09/2026 - 02/09/2026 · £5.50-£11.65 · Bristol Business School</p>
+      </div>
+    </a>
+
+    <!-- Event Card 3 -->
+    <a class="event-card" href="{{ url_for('event_details', event_id=3) }}">
+      <img
+        src="https://images.squarespace-cdn.com/content/v1/5f1811b47a7edc2eea4892b4/e8f62d07-b77e-4a0e-8071-65de4e22a1d0/Black+Logo+Plain+Large.png"
+        alt="Film Festival"
+      />
+      <div class="info">
+        <h3>Bristol Film Festival</h3>
+        <p>
+          October - December 2025 · £11-£16 · The Planetarium, We The Curious
+        </p>
+      </div>
+    </a>
+
+    <!-- Event Card 4 -->
+    <a class="event-card" href="{{ url_for('event_details', event_id=4) }}">
+      <img
+        src="https://upload.wikimedia.org/wikipedia/commons/e/ee/Bristol_International_Balloon_Fiesta_August_14_2004.JPG"
+        alt="Balloon Fiesta"
+      />
+      <div class="info">
+        <h3>Bristol Balloon Fiesta 2026</h3>
+        <p>07/08/2026 · Free · Ashton Court</p>
+      </div>
+    </a>
+  </div>
+</div>
+
+<script>
+  const btn = document.getElementById("menu-btn");
+  const menu = document.getElementById("nav-menu");
+  btn.addEventListener("click", () => menu.classList.toggle("open"));
+</script>
+
+{% endblock %}

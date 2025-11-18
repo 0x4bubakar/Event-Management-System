@@ -1,0 +1,117 @@
+#hero-container {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.3)),
+    url(//upload.wikimedia.org/wikipedia/commons/1/19/Clifton_Suspension_Bridge_and_the_Observatory_in_Bristol%2C_England.jpg);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  text-align: center;
+  height: 60vh;
+  padding: 0 4rem;
+  color: white;
+}
+
+#hero-left {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5 rem;
+  max-width: 100%;
+}
+
+#hero-text h1 {
+  font-size: 1.8rem;
+  line-height: 1.2;
+}
+
+#hero-text p {
+  font-size: 1.1rem;
+  line-height: 1.45;
+}
+
+.search {
+  width: 100%;
+}
+
+.search form input {
+  padding: 0.75rem 1rem;
+  width: 100%;
+  font-size: 1rem;
+  border-radius: 10px;
+}
+
+.search form input:focus {
+  outline: 2px solid #fff;
+}
+
+#search #hint {
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+#events-container {
+  padding: 2rem 4rem;
+}
+
+#events {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin: 1rem 15% 0;
+}
+
+.event-card {
+  background-color: #fff;
+  padding: 1rem;
+  border-radius: 1px solid #000;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  color: #111;
+  text-decoration: none;
+}
+
+@media (min-width: 768px) {
+  /*tablet/small laptop display size*/
+  #hero-container {
+    padding: 3rem 2rem;
+    text-align: left;
+    align-items: flex-start;
+  }
+
+  #hero-left {
+    max-width: 70%;
+  }
+
+  #hero-text {
+    font-size: 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  /*desktop*/
+  #hero-container {
+    text-align: left;
+    align-items: flex-start;
+    height: 60vh;
+    padding: 0 4rem;
+  }
+
+  #hero-left {
+    max-width: 70%;
+  }
+
+  #hero-text h1 {
+    font-size: 2.5rem;
+  }
+
+  #hero-text p {
+    font-size: 1.25rem;
+  }
+
+  .search form input {
+    font-size: 1.1rem;
+  }
+}

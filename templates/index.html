@@ -1,76 +1,67 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='style.css') }}"
-    />
-    <title>BCE Events</title>
-  </head>
-  <body>
-    <header>
-      <h1>BCE Events</h1>
-      <nav>
-        <ul>
-          <li><a href="{{ url_for('index') }}">Home</a></li>
-          <li><a href="{{ url_for('login') }}">Login/Sign Up</a></li>
-          <li><a href="#events">Events</a></li>
-        </ul>
-      </nav>
-    </header>
-
-    <section id="hero-container">
-      <div id="hero-left">
-        <div id="hero-text">
-          <h1>Discover what's happening in Bristol</h1>
-          <p>
-            Your next night out starts here - find matches, workshops, meetups,
-            and hidden gems around the city.
-          </p>
-        </div>
-        <div class="search">
-          <form>
-            <input
-              type="text"
-              placeholder="Where would you like to go?"
-              size="30"
-            />
-          </form>
-          <p id="hint">
-            <i>Try: "street food", "tech meetup", "open mic"</i>
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <div id="events-container">
-      <h1 style="text-align: center">Upcoming events</h1>
-      <section id="events">
-        <div class="event-card">
-          <h2>Bristol City vs Bristol Rovers</h2>
-          <p>Ashton Gate Stadium<br />20/11/2025<br />£20-£79</p>
-        </div>
-        <div class="event-card">
-          <h2>BSides Bristol 2026</h2>
-          <p>
-            Bristol Business School, UWE Frenchay Campus<br />01/09/2026 -
-            02/09/2026 <br />£5.50-£11.65
-          </p>
-        </div>
-        <div class="event-card">
-          <h2>Bristol Balloon Fiesta 2026</h2>
-          <p>Ashton Court<br />07/08/2026<br />Free</p>
-        </div>
-        <div class="event-card">
-          <h2>Bristol Film Festival</h2>
-          <p>
-            The Planetarium, We The Curious<br />
-            October - December 2025 <br />£11-£16
-          </p>
-        </div>
-      </section>
+{% extends "layout.html" %} {% block title %} Home | Bristol Community Events {%
+endblock %} {% block styles %}<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='index.css') }}"
+/>
+{% endblock %} {% block body %}
+<section id="hero-container">
+  <div id="hero-left">
+    <div id="hero-text">
+      <h1>Discover what's happening in Bristol</h1>
+      <p>
+        Your next night out starts here - find matches, workshops, meetups, and
+        hidden gems around the city.
+      </p>
+      <br />
     </div>
-  </body>
-</html>
+    <div class="search">
+      <form>
+        <input
+          type="text"
+          placeholder="Where would you like to go?"
+          size="30"
+        />
+      </form>
+      <br />
+      <p id="hint">
+        <i>Try: "street food", "tech meetup", "open mic"</i>
+      </p>
+    </div>
+  </div>
+</section>
+
+<br />
+
+<div id="events-container">
+  <h1 style="text-align: center">Upcoming events</h1>
+  <section id="events">
+    <a href="{{ url_for('event_details', event_id=1) }}" class="event-card">
+      <h2>Bristol City vs Bristol Rovers</h2>
+      <p>Ashton Gate Stadium<br />20/11/2025<br />£20-£79</p>
+    </a>
+
+    <a href="{{ url_for('event_details', event_id=2) }}" class="event-card">
+      <h2>BSides Bristol 2026</h2>
+      <p>
+        Bristol Business School, UWE Frenchay Campus<br />
+        01/09/2026 - 02/09/2026<br />
+        £5.50-£11.65
+      </p>
+    </a>
+
+    <a href="{{ url_for('event_details', event_id=3) }}" class="event-card">
+      <h2>Bristol Balloon Fiesta 2026</h2>
+      <p>Ashton Court<br />07/08/2026<br />Free</p>
+    </a>
+
+    <a href="{{ url_for('event_details', event_id=4) }}" class="event-card">
+      <h2>Bristol Film Festival</h2>
+      <p>
+        The Planetarium, We The Curious<br />
+        October - December 2025<br />
+        £11-£16
+      </p>
+    </a>
+  </section>
+</div>
+{% endblock %}
