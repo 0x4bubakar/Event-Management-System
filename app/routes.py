@@ -1,6 +1,14 @@
+from app import app
 from flask import Flask, redirect, render_template, url_for
-
 from flask import render_template
+import mysql.connector
+
+try:
+    conn = mysql.connector.connect(host='127.0.0.1',user='root',password='lebronBuBu67!')
+except mysql.connector.Error as err:
+    print(err)
+
+
 
 EVENTS = {
     1: {
@@ -52,8 +60,6 @@ EVENTS = {
     }
 }
 
-app = Flask(__name__)
-
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -64,6 +70,7 @@ def login():
 
 @app.route('/events')
 def events():
+
     return render_template('events.html')
 
 @app.route("/events/<int:event_id>")
@@ -76,6 +83,3 @@ def event_details(event_id):
 @app.route("/category/<name>")
 def category(name):
     return f"Category page for {name}"
-
-if __name__ == "__main__":
-    app.run(debug=True)

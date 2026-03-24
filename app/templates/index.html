@@ -7,22 +7,18 @@ endblock %} {% block styles %}<link
 <section id="hero-container">
   <div id="hero-left">
     <div id="hero-text">
-      <h1>Discover what's happening in Bristol</h1>
-      <p>
-        Your next night out starts here - find matches, workshops, meetups, and
-        hidden gems around the city.
-      </p>
-      <br />
+      <h1>Bristol's guide to what's on</h1>
+      <p>Discover, book, and experience Bristol's best-kept secrets. From gigs and artisan markets to the next big game - if it's happening it's on our radar!</p>
     </div>
     <div class="search">
       <form>
         <input
           type="text"
-          placeholder="Where would you like to go?"
+          placeholder="Where to next?"
           size="30"
         />
       </form>
-      <br />
+
       <p id="hint">
         <i>Try: "street food", "tech meetup", "open mic"</i>
       </p>
@@ -34,7 +30,7 @@ endblock %} {% block styles %}<link
 
 <div id="events-container">
   <h1 style="text-align: center">Upcoming events</h1>
-  <section id="events">
+  <!-- <section id="events">
     <a href="{{ url_for('event_details', event_id=1) }}" class="event-card">
       <h2>Bristol City vs Bristol Rovers</h2>
       <p>Ashton Gate Stadium<br />20/11/2025<br />£20-£79</p>
@@ -62,6 +58,6 @@ endblock %} {% block styles %}<link
         £11-£16
       </p>
     </a>
-  </section>
+  </section> -->
 </div>
 {% endblock %}

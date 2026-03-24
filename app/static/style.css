@@ -28,7 +28,12 @@ header {
   cursor: pointer;
 }
 
-/*mobile nav menu (hidden)*/
+/* disable desktop logo on mobile */
+#desktop-logo {
+  display: none;
+}
+
+/*mobile nav menu (hidden on desktop)*/
 #nav-menu {
   display: none;
   flex-direction: column;
@@ -73,6 +78,14 @@ header {
 @media (min-width: 768px) {
   #menu-btn {
     display: none; /* hide burger */
+  }
+
+  #mobile-logo {
+    display: none;
+  }
+
+  #desktop-logo {
+    display: block;
   }
 
   #nav-menu {
