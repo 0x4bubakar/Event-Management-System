@@ -66,11 +66,16 @@ def index():
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
+    if request.method == "POST":
+        email = request.form["email"]
+        password = request.form["password"]
+        # return auth.validate(email, password)
     return render_template('login.html')
+
+# some route for registration
 
 @app.route('/events')
 def events():
-
     return render_template('events.html')
 
 @app.route("/events/<int:event_id>")
