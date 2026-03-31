@@ -1,10 +1,20 @@
+import os
 from app import app
 from flask import Flask, redirect, render_template, url_for
 from flask import render_template
 import mysql.connector
+from dotenv import load_dotenv
+load_dotenv()
 
 try:
-    conn = mysql.connector.connect(host='127.0.0.1',user='root',password='lebronBuBu67!')
+    conn = mysql.connector.connect(
+        host=os.getenv("DB_HOST"),
+        user=os.getenv("DB_USERNAME"),
+        password=os.getenv("DB_PASSWORD"),
+        database=os.getenv("DB_NAME")
+    )
+    print("Connection to DB successful!")
+
 except mysql.connector.Error as err:
     print(err)
 
@@ -69,6 +79,7 @@ def login():
     if request.method == "POST":
         email = request.form["email"]
         password = request.form["password"]
+        
         # return auth.validate(email, password)
     return render_template('login.html')
 
