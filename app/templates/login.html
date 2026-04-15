@@ -3,6 +3,7 @@
   href="{{ url_for('static', filename='login.css') }}"
 />{% endblock %} {% block title %} Login / Sign Up | Bristol Community Events {%
 endblock %} {% block body %}
+
 <section class="auth-container">
   <div class="auth-card">
     <div class="auth-toggle">
@@ -13,7 +14,7 @@ endblock %} {% block body %}
     <form method="POST" action="{{ url_for('login') }}" id="loginForm">
       <div class="input-group">
         <label>Email</label>
-        <input type="email" name="email" required />
+        <input type="email" name="email" required />  
       </div>
 
       <div class="input-group">
@@ -25,7 +26,7 @@ endblock %} {% block body %}
     </form>
 
     <!-- SIGNUP FORM -->
-    <form method="POST" id="signupForm" class="hidden">
+    <form method="POST" action="{{ url_for('signup') }}" id="signupForm" class="hidden">
       <div class="input-group">
         <label>Full Name</label>
         <input type="text" name="name" required />

@@ -8,6 +8,6 @@ def create_user(email, plain_text_password):
 
 def verify_login(email, provided_password):
     cursor = db.get_connection().cursor()
-    cursor.execute("SELECT ")
-
+    cursor.execute("SELECT password_hash FROM user WHERE %s", (email,))
+    db_hashed_pw = cursor.fetchone() 
     return check_password_hash(db_hashed_pw, provided_password)

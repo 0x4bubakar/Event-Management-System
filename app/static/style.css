@@ -112,13 +112,18 @@ header {
   }
 }
 
-/*
+#flash-messages {
+  list-style-type: none;
+}
 
-each event has a details page
-mock credit card page
-opt for now - receipt
-login/reg page
-pdf validator page
-rwd - 3 levels                  x
+.success {
+  background: greenyellow;
+}
 
-*/
+.error {
+  background-color: tomato;
+}
+
+.info {
+  background-color: bisque;
+}

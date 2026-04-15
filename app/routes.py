@@ -1,6 +1,6 @@
 import os
-from app import app, routes
-from flask import Flask, redirect, render_template, url_for, request
+from app import app, models
+from flask import Flask, redirect, render_template, url_for, request, flash
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -13,10 +13,21 @@ def login():
     if request.method == "POST":
         email = request.form["email"]
         password = request.form["password"]
-        record = db.verify_login(email, password)
+        if models.verify_login(email, password):
+            flash("Successfully logged in!", "success")
+            return redirect(url_for('index'))
+        else:
+            flash("Invalid credentials. Please try again.", "error")
     return render_template('login.html')
 
-# some route for registration
+@app.route('/signup', methods=['POST', 'GET'])
+def signup():
+    if request.method == "POST":
+        name = request.form["name"]
+        email = request.form["email"]
+        password = request.form["password"]
+        return render_template('login.html')
+
 
 @app.route('/events')
 def events():
@@ -27,7 +38,7 @@ def event_details(event_id):
     event = EVENTS.get(event_id)
     if not event:
         return "Event not found", 404
-    return render_template("event-details.html", event=event)
+    return render_template("event-details.html", event=event) 
 
 @app.route("/category/<name>")
 def category(name):
