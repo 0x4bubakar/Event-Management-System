@@ -13,11 +13,14 @@ def login():
     if request.method == "POST":
         email = request.form["email"]
         password = request.form["password"]
-        if models.verify_login(email, password):
-            flash("Successfully logged in!", "success")
-            return redirect(url_for('index'))
+        if email != None and password != None: 
+            if models.verify_login(email, password):
+                flash("Successfully logged in!", "flash-success")
+                return redirect(url_for('index'))
+            else:
+                flash("Invalid credentials. Please try again.", "flash-error")
         else:
-            flash("Invalid credentials. Please try again.", "error")
+            flash("One of the fields are missing information. Please fill them in.", "flash-error")
     return render_template('login.html')
 
 @app.route('/signup', methods=['POST', 'GET'])
@@ -26,6 +29,10 @@ def signup():
         name = request.form["name"]
         email = request.form["email"]
         password = request.form["password"]
+        if name != None and email != None and password != None:
+            if models.create_user(name, email, password):
+                flash("Successfully logged in!", "flash-success")
+            # if return error - do some kind of error handling -> try except for models?
         return render_template('login.html')
 
 
