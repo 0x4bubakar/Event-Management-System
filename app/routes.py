@@ -1,8 +1,10 @@
 import os
 from app import app, models
-from flask import Flask, redirect, render_template, url_for, request, flash
+from flask import Flask, redirect, render_template, url_for, request, flash, session
 from dotenv import load_dotenv
 load_dotenv()
+
+app.secret_key = os.getenv("SECRET_KEY")
 
 @app.route('/')
 def index():
@@ -18,12 +20,14 @@ def login():
     if request.method == "POST":
         email = request.form["email"]
         password = request.form["password"]
-        if email != None and password != None: 
-            if models.verify_login(email, password):
-                flash("Successfully logged in!", "flash-success")
+        if email and password:
+            user_id, message = models.verify_login(email, password) 
+            if user_id:
+                flash(message,"flash-success")
+                session["user_id"] = user_id
                 return redirect(url_for('index'))
             else:
-                flash("Invalid credentials. Please try again.", "flash-error")
+                flash(message, "flash-error")
         else:
             flash("One of the fields are missing information. Please fill them in.", "flash-error")
     return render_template('login.html')
@@ -34,15 +38,17 @@ def signup():
         name = request.form["name"]
         email = request.form["email"]
         password = request.form["password"]
-        if name != None and email != None and password != None:
-            hasSignedUp = models.create_user(name, email, password)
-            if hasSignedUp[0]:
-                flash(hasSignedUp[1], "flash-success")
+        if name and email and password:
+            user_id, message = models.create_user(name, email, password)
+            if user_id:
+                flash(message, "flash-success")
+                session["user_id"] = user_id
+                return redirect(url_for('index'))
             else:
-                flash(hasSignedUp[1], "flash-error")
+                flash(message, "flash-error")
         else:
             flash("One of the fields are missing information. Please fill them in.", "flash-error")
-        return render_template('login.html')
+    return render_template('login.html')
 
 
 @app.route('/events')

@@ -31,7 +31,13 @@
         <ul>
           <li><a href="{{ url_for('index') }}">Home</a></li>
           <li><a href="{{ url_for('events') }}">Events</a></li>
-          <li><a href="{{ url_for('login') }}">Login/Sign Up</a></li>
+          {% if session["user_id"]: %}
+            <li><a href="#">My Tickets</a></li>
+            <li><a href="#">My Profile</a></li>
+            <li><a href="#">Sign Out</a></li>
+          {% else %}
+            <li><a href="{{ url_for('login') }}">Login/Sign Up</a></li>
+          {% endif %}
         </ul>
       </nav>
     </header>

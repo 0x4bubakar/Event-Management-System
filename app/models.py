@@ -10,7 +10,7 @@ def create_user(name, email, plain_text_password):
     user_exists = cursor.fetchone()
     
     if user_exists:
-        return False, "Account already exists, please log in."
+        return None, "Account already exists, please log in."
     
     else:
         query = "INSERT INTO user (name, email, password_hash, role) VALUES(%s, %s, %s, %s)"
@@ -19,12 +19,13 @@ def create_user(name, email, plain_text_password):
         try:
             cursor.execute(query, (name, email, password_hash, default_role))
             conn.commit()
-            return True, "User created successfully!"
+            user_id = cursor.lastrowid
+            return user_id, "User created successfully!"
         
         except Exception as e:
             conn.rollback()
             print(f"Database error: {str(e)}")
-            return False, "System error, please try again later."
+            return None, "System error, please try again later."
         
         finally:
             cursor.close()
@@ -35,22 +36,24 @@ def verify_login(email, provided_password):
 
     
     try:
-        query = "SELECT password_hash FROM user WHERE email = %s"
-        cursor.execute(query, (email))
+        query = "SELECT password_hash, user_id FROM user WHERE email = %s"
+        cursor.execute(query, (email,))
         user_record = cursor.fetchone()
 
         if user_record:
-            db_hashed_pw = user_record[0]        
+            db_hashed_pw = user_record[0]
+            user_id = user_record[1]        
             if check_password_hash(db_hashed_pw, provided_password):
-                return True
+                return user_id, "Successfully logged in!"
             else:
-                return False, "Invalid credentials."
+                return None, "Invalid credentials, please try again"
         else:
-            return False, "Invalid credentials." # use generic error messages to avoid user enumeration
+            return None, "Invalid credentials, please try again"
+            
 
     except Exception as e:
         print(f"Database error: {str(e)}")
-        return False, "System error, please try again later."
+        return None, "System error, please try again later."
     
     finally:
         cursor.close()
