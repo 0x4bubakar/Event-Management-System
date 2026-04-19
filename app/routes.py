@@ -8,6 +8,11 @@ load_dotenv()
 def index():
     return render_template('index.html')
 
+@app.errorhandler(404)
+def page_not_found(error):
+    return render_template("404.html"), 404
+
+
 @app.route('/login', methods=['POST', 'GET'])
 def login():
     if request.method == "POST":
@@ -30,9 +35,13 @@ def signup():
         email = request.form["email"]
         password = request.form["password"]
         if name != None and email != None and password != None:
-            if models.create_user(name, email, password):
-                flash("Successfully logged in!", "flash-success")
-            # if return error - do some kind of error handling -> try except for models?
+            hasSignedUp = models.create_user(name, email, password)
+            if hasSignedUp[0]:
+                flash(hasSignedUp[1], "flash-success")
+            else:
+                flash(hasSignedUp[1], "flash-error")
+        else:
+            flash("One of the fields are missing information. Please fill them in.", "flash-error")
         return render_template('login.html')
 
 
