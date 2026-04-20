@@ -33,23 +33,22 @@ def create_user(name, email, plain_text_password):
 def verify_login(email, provided_password):
     conn = db.get_connection()
     cursor = conn.cursor()
-
     
     try:
-        query = "SELECT password_hash, user_id FROM user WHERE email = %s"
+        query = "SELECT password_hash, user_id, name FROM user WHERE email = %s"
         cursor.execute(query, (email,))
         user_record = cursor.fetchone()
 
         if user_record:
             db_hashed_pw = user_record[0]
-            user_id = user_record[1]        
+            user_id = user_record[1] 
+            name = user_record[2]      
             if check_password_hash(db_hashed_pw, provided_password):
-                return user_id, "Successfully logged in!"
+                return user_id, name, "Successfully logged in!"
             else:
-                return None, "Invalid credentials, please try again"
+                return None, None, "Invalid credentials, please try again"
         else:
-            return None, "Invalid credentials, please try again"
-            
+            return None, None, "Invalid credentials, please try again"
 
     except Exception as e:
         print(f"Database error: {str(e)}")

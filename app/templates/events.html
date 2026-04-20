@@ -3,7 +3,11 @@
 {% endblock %} {% block title %} Events | Bristol Community Events {% endblock
 %} {% block body %}
 
+
 <div class="events-container">
+  {% if session.get("user_id"): %}
+  <h1>Back for another journey, {{session.get("name")}}?</h1>
+  {% endif %}
   <!-- Search / Filters -->
   <div class="filters">
     <input

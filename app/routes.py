@@ -8,7 +8,10 @@ app.secret_key = os.getenv("SECRET_KEY")
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    if session.get("user_id"):
+        return redirect(url_for('events'))
+    else:
+        return render_template('index.html')
 
 @app.errorhandler(404)
 def page_not_found(error):
@@ -21,10 +24,11 @@ def login():
         email = request.form["email"]
         password = request.form["password"]
         if email and password:
-            user_id, message = models.verify_login(email, password) 
+            user_id, name, message = models.verify_login(email, password) 
             if user_id:
                 flash(message,"flash-success")
                 session["user_id"] = user_id
+                session["name"] = name
                 return redirect(url_for('index'))
             else:
                 flash(message, "flash-error")
