@@ -9,7 +9,7 @@ app.secret_key = os.getenv("SECRET_KEY")
 @app.route('/')
 def index():
     if session.get("user_id"):
-        return redirect(url_for('events'))
+        return render_template('events.html')
     else:
         return render_template('index.html')
 
