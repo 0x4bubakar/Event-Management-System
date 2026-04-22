@@ -30,7 +30,7 @@ endblock %} {% block styles %}<link
 
 <div id="events-container">
   <h1 style="text-align: center">Upcoming events</h1>
-  <!-- <section id="events">
+  <section id="events">
     <a href="{{ url_for('event_details', event_id=1) }}" class="event-card">
       <h2>Bristol City vs Bristol Rovers</h2>
       <p>Ashton Gate Stadium<br />20/11/2025<br />£20-£79</p>
@@ -58,6 +58,27 @@ endblock %} {% block styles %}<link
         £11-£16
       </p>
     </a>
-  </section> -->
+  </section>
 </div>
+
+<section id="signup-cta">
+  <h1>Why book with BCE?</h1>
+  <div id="signup-cta-reasons">
+    <div class="bce-perks">
+      <h2>💰</h2>
+      <p><b>Early bird discounts</b></p>
+      <p>Book X days ahead and save upto Y%!</p>
+    </div>
+    <div class="bce-perks">
+      <h2>🎓</h2>
+      <p><b>Student discount</b></p>
+      <p>X% off every booking when you verify with a valid .ac.uk email.</p>
+    </div>
+    <div class="bce-perks">
+      <h2>🧾</h2>
+      <p><b>Instant receipts</b></p>
+      <p>Download and print receipts of your bookings.</p>
+    </div>
+  </div>
+</section> 
 {% endblock %}

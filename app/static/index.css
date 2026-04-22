@@ -51,7 +51,7 @@
 
 .search form input:focus {
   outline: 2px solid #fff;
-}
+} 
 
 #search #hint {
   font-size: 0.9rem;
@@ -76,6 +76,23 @@
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   color: #111;
   text-decoration: none;
+}
+
+#signup-cta {
+  text-align: center;
+}
+
+#signup-cta-reasons {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  gap: 3rem;
+  margin-top: 2rem;
+}
+
+.bce-perks {
+  flex: 1;
 }
 
 @media (min-width: 768px) {

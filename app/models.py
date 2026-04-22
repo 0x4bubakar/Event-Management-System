@@ -57,13 +57,13 @@ def verify_login(email, provided_password):
     finally:
         cursor.close()
 
-def fetch_recent_events():
-    conn = db.get_connection()
-    cursor = conn.cursor()
+# def fetch_recent_events():
+#     conn = db.get_connection()
+#     cursor = conn.cursor()
 
-    try:
+#     try:
         
-    except:
+#     except:
 
-    finally:
-        cursor.close()
+#     finally:
+#         cursor.close()

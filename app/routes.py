@@ -2,9 +2,29 @@ import os
 from app import app, models
 from flask import Flask, redirect, render_template, url_for, request, flash, session
 from dotenv import load_dotenv
+from functools import wraps
 load_dotenv()
 
 app.secret_key = os.getenv("SECRET_KEY")
+
+def is_logged_in(f):
+    @wraps(f)
+    def wraps(*args, **kwargs):
+        if session["user_id"]:
+            return f(*args, **kwargs)
+        else:
+            flash("Please sign in", "flash-error")
+            return render_template(url_for('login')), 403
+    return wraps
+
+def is_admin(f):
+    @wraps(f)
+    def wraps(*args, **kwargs):
+        if session["role"] == "admin":
+            return f(*args, **kwargs)
+        else:
+            flash("You are not authorised to view this page", "flash-error")
+            return render_template(url_for('login')), 403
 
 @app.route('/')
 def index():
@@ -68,4 +88,4 @@ def event_details(event_id):
 
 @app.route("/category/<name>")
 def category(name):
-    return f"Category page for {name}"
+    return f"Category page for {name}"x``
