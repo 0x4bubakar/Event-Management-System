@@ -1,5 +1,5 @@
 from werkzeug.security import generate_password_hash, check_password_hash
-from app import db
+from app import db_connector
 
 def create_user(name, email, plain_text_password):
     conn = db.get_connection()
