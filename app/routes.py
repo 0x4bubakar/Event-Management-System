@@ -9,22 +9,17 @@ app.secret_key = os.getenv("SECRET_KEY")
 
 def is_logged_in(f):
     @wraps(f)
-    def wraps(*args, **kwargs):
-        if session["user_id"]:
+    def decorator(*args, **kwargs):
+        if session.get("user_id"):
             return f(*args, **kwargs)
         else:
             flash("Please sign in", "flash-error")
-            return render_template(url_for('login')), 403
-    return wraps
+            return redirect(url_for('login')), 403
+    return decorator
 
-def is_admin(f):
-    @wraps(f)
-    def wraps(*args, **kwargs):
-        if session["role"] == "admin":
-            return f(*args, **kwargs)
-        else:
-            flash("You are not authorised to view this page", "flash-error")
-            return render_template(url_for('login')), 403
+@app.errorhandler(404)
+def page_not_found(error):
+    return render_template("404.html"), 404
 
 @app.route('/')
 def index():
@@ -32,11 +27,6 @@ def index():
         return render_template('events.html')
     else:
         return render_template('index.html')
-
-@app.errorhandler(404)
-def page_not_found(error):
-    return render_template("404.html"), 404
-
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
@@ -67,6 +57,7 @@ def signup():
             if user_id:
                 flash(message, "flash-success")
                 session["user_id"] = user_id
+                session["name"] = name
                 return redirect(url_for('index'))
             else:
                 flash(message, "flash-error")
@@ -74,6 +65,22 @@ def signup():
             flash("One of the fields are missing information. Please fill them in.", "flash-error")
     return render_template('login.html')
 
+@app.route('/dashboard', methods=['POST', 'GET'])
+@is_logged_in
+def dashboard():
+    user_id = session.get("user_id")
+    user_data = models.get_user_by_id(user_id)
+
+    if not user_data:
+        flash("Could not load data for user profile", "flash-error")
+        return redirect(url_for('index'))
+    
+    if user_data['role'] == "admin":
+        return render_template('admin-dashboard.html')
+    
+    bookings = models.get_bookings_by_id(user_id)
+        
+    return render_template('user-dashboard.html', email=user_data['email'], name=user_data['name'], bookings=bookings)
 
 @app.route('/events')
 def events():
@@ -88,4 +95,4 @@ def event_details(event_id):
 
 @app.route("/category/<name>")
 def category(name):
-    return f"Category page for {name}"x``
+    return f"Category page for {name}"

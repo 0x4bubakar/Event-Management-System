@@ -128,3 +128,9 @@ header {
 .flash-info {
   background-color: bisque;
 }
+
+.content-container {
+  max-width: 1100px;
+  margin: auto;
+  padding: 1.5rem;
+}

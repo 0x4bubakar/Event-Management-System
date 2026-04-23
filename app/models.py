@@ -57,6 +57,58 @@ def verify_login(email, provided_password):
     finally:
         cursor.close()
 
+def get_user_by_id(user_id):
+    conn = db.get_connection()
+    cursor = conn.cursor()
+
+    try:
+        query = "SELECT name, email, role FROM user WHERE user_id = %s"
+        cursor.execute(query, (user_id,))
+        user_record = cursor.fetchone()
+        if user_record:
+            return {
+                "name": user_record[0],
+                "email": user_record[1],
+                "role": user_record[2]
+            }
+        return None
+    
+    except Exception as e:
+        print(f"Database error: {str(e)}")
+        return None
+    
+    finally:
+        cursor.close()
+
+def get_bookings_by_id(user_id):
+    conn = db.get_connection()
+    cursor = conn.cursor()
+
+    try:
+        query = "SELECT event.event_name, event.start_date, booking.days_booked, booking.status, booking.final_price FROM booking JOIN event ON booking.event_id = event.event_id WHERE booking.user_id = %s"
+        cursor.execute(query, (user_id,))
+        records = cursor.fetchall()
+
+        bookingsList = []
+
+        for row in records:
+            bookingsList.append({
+                "event_name": row[0],
+                "start_date": row[1],
+                "days_booked": row[2],
+                "booking_status": row[3],
+                "final_price": row[4],
+            })
+
+        return bookingsList
+    
+    except Exception as e:
+        print(f"Database error in bookings: {str(e)}")
+        return []
+    
+    finally:
+        cursor.close()
+
 # def fetch_recent_events():
 #     conn = db.get_connection()
 #     cursor = conn.cursor()
