@@ -14,7 +14,7 @@ def is_logged_in(f):
             return f(*args, **kwargs)
         else:
             flash("Please sign in", "flash-error")
-            return redirect(url_for('login')), 403
+            return redirect(url_for('login'))
     return decorator
 
 @app.errorhandler(404)
@@ -64,6 +64,13 @@ def signup():
         else:
             flash("One of the fields are missing information. Please fill them in.", "flash-error")
     return render_template('login.html')
+
+@is_logged_in
+@app.route('/signout', methods=['GET'])
+def signout():
+    session.clear()
+    return redirect(url_for('index'))
+
 
 @app.route('/dashboard', methods=['POST', 'GET'])
 @is_logged_in

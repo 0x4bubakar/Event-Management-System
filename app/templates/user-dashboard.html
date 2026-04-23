@@ -34,7 +34,7 @@
 
     <section class="dash-section">
         <h2>Bookings</h2>
-        <p>here will be a table of a user's bookings. there will be invisible columns for a receipt and delete buttons. event page is hyperlinked</p>
+
         {% if bookings %}
         <table id="bookings-table">
             <thead>
@@ -44,8 +44,7 @@
                     <th># of Days Booked</th>
                     <th>Booking Status</th>
                     <th>Price</th>
-                    <th></th>
-                    <th></th>
+                    <th colspan="2">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -68,6 +67,7 @@
             <a href="{{url_for('events')}}" class="blue-btn">Browse events</a>
         </div>
         {% endif %}
+        
     </section>
 
 </div>
