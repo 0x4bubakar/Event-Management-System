@@ -2,7 +2,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from app import db_connector
 
 def create_user(name, email, plain_text_password):
-    conn = db.get_connection()
+    conn = db_connector.get_connection()
     cursor = conn.cursor()
 
     query = "SELECT email from user WHERE email = %s"
@@ -31,7 +31,7 @@ def create_user(name, email, plain_text_password):
             cursor.close()
 
 def verify_login(email, provided_password):
-    conn = db.get_connection()
+    conn = db_connector.get_connection()
     cursor = conn.cursor()
     
     try:
@@ -58,7 +58,7 @@ def verify_login(email, provided_password):
         cursor.close()
 
 def get_user_by_id(user_id):
-    conn = db.get_connection()
+    conn = db_connector.get_connection()
     cursor = conn.cursor()
 
     try:
@@ -81,7 +81,7 @@ def get_user_by_id(user_id):
         cursor.close()
 
 def get_bookings_by_id(user_id):
-    conn = db.get_connection()
+    conn = db_connector.get_connection()
     cursor = conn.cursor()
 
     try:
