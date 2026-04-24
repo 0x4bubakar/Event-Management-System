@@ -80,6 +80,31 @@ def get_user_by_id(user_id):
     finally:
         cursor.close()
 
+def update_user(user_id, name, email, password):
+    conn = db_connector.get_connection()
+    cursor = conn.cursor()
+
+    try:
+        if password:
+            hashed_password = generate_password_hash(password)
+            query = "UPDATE user SET name = %s, email = %s, password_hash = %s WHERE user_id = %s"
+            cursor.execute(query, (name, email, hashed_password, user_id))
+        
+        else:
+            query = "UPDATE user SET name = %s, email = %s WHERE user_id = %s"
+            cursor.execute(query, (name, email, user_id))
+
+        conn.commit()
+        return True
+    
+    except Exception as e:
+        conn.rollback()
+        print(f"Account details update error: {str(e)}")
+        return False
+    
+    finally:
+        cursor.close()
+
 def get_bookings_by_id(user_id):
     conn = db_connector.get_connection()
     cursor = conn.cursor()

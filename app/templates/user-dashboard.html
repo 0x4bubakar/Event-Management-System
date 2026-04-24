@@ -12,24 +12,37 @@
 
     <section class="dash-section">
         <h2 class="header-2">Account</h2>
+        <form method="POST" action="{{ url_for('update_profile') }}">
         <table>
             <tr>
                 <th>Email</th>
-                <td>{{email}}</td>
+                <td class="view-mode">{{email}}</td>
+                <td class="edit-mode"><input name="email" type="email" value="{{email}}"></td>
             </tr>
             <tr>
                 <th>Name</th>
-                <td>{{name}}</td>
+                <td class="view-mode">{{name}}</td>
+                <td class="edit-mode"><input name="name" type="text" value="{{name}}"></td>
             </tr>
             <tr>
                 <th>Password</th>
-                <td>●●●●●●●●</td>
+                <td class="view-mode">●●●●●●●●</td>
+                <td class="edit-mode"><input name="password" type="password"></td>
             </tr>
         </table>
-        <div class="btn-selector">
-            <button class="blue-btn">Edit details</button>
-            <button class="red-btn">Delete account</button>
+        <div class="view-mode">
+            <div class="btn-selector">
+                <button class="blue-btn" id="editBtn" type="button">Edit details</button>
+                <button class="red-btn" type="button">Delete account</button>
+            </div>
         </div>
+        <div class="edit-mode">
+            <div class="btn-selector">
+                <input type="submit" class="blue-btn" value="Save changes">
+                <button class="red-btn" id="cancelBtn" type="button">Cancel</button>
+            </div>
+        </div>
+        </form>
     </section>
 
     <section class="dash-section">
@@ -63,7 +76,7 @@
         </table>
         {% else %}
         <div class="empty-state">
-            <p>You haven't booked any events yet. Why not explore what's going on in Bristol?</p>
+            <p style="margin-bottom: 1rem;">You haven't booked any events yet. Why not explore what's going on in Bristol?</p>
             <a href="{{url_for('events')}}" class="blue-btn">Browse events</a>
         </div>
         {% endif %}
@@ -71,4 +84,43 @@
     </section>
 
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const editBtn = document.getElementById('editBtn');
+const cancelBtn = document.getElementById('cancelBtn');
+const viewMode = document.querySelectorAll('.view-mode');
+const editMode = document.querySelectorAll('.edit-mode');
+
+function toggleEditMode() {
+
+    viewMode.forEach(function(element) {
+        if (element.style.display === 'none') {
+            element.style.display = '';
+        } else {
+            element.style.display = 'none';
+        }
+    });
+
+    editMode.forEach(function(element) {
+        let targetDisplay;
+
+        if (element.tagName === 'TD') {
+            targetDisplay = 'table-cell';
+        } else {
+            targetDisplay = 'block';
+        }
+
+        if (element.style.display === targetDisplay) {
+            element.style.display = 'none';
+        } else {
+            element.style.display = targetDisplay;
+        }
+    });
+}
+
+editBtn.addEventListener('click', toggleEditMode);
+cancelBtn.addEventListener('click', toggleEditMode);
+</script>
 {% endblock %}

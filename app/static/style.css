@@ -134,3 +134,11 @@ header {
   margin: auto;
   padding: 1.5rem;
 }
+
+.view-mode {
+  display: block;
+}
+
+.edit-mode {
+  display: none;
+}

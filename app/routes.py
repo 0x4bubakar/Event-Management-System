@@ -17,6 +17,20 @@ def is_logged_in(f):
             return redirect(url_for('login'))
     return decorator
 
+def is_admin(f):
+    @wraps(f)
+    def decorator(*args, **kwargs):
+        user_id = session.get("user_id")
+        user_data = models.get_user_by_id(user_id)
+        
+        if user_data and user_data['role'] == 'admin':
+            return f(*args, **kwargs)
+        else:
+            flash("Unauthorised access detected. Please log in.", "flash-error")
+            return redirect(url_for('login'))
+        
+    return decorator
+
 @app.errorhandler(404)
 def page_not_found(error):
     return render_template("404.html"), 404
@@ -82,13 +96,36 @@ def dashboard():
         flash("Could not load data for user profile", "flash-error")
         return redirect(url_for('index'))
     
-    if user_data['role'] == "admin":
-        return render_template('admin-dashboard.html')
+    if user_data['role'] == 'admin':
+        return redirect(render_template('admin-dashboard.html'))
     
     bookings = models.get_bookings_by_id(user_id)
         
     return render_template('user-dashboard.html', email=user_data['email'], name=user_data['name'], bookings=bookings)
 
+@app.route('/update-profile', methods=['POST'])
+@is_logged_in
+def update_profile():
+    user_id = session.get("user_id")
+    new_email = request.form.get("email")
+    new_name = request.form.get("name")
+    new_password = request.form.get("password")
+
+    # potential sanitisation logic, validation
+    if not new_name or not new_email:
+        flash("Name and email cannot be empty.", "flash-error")
+        return redirect(url_for('dashboard'))
+    
+    update = models.update_user(user_id, new_name, new_email, new_password)
+
+    if update:
+        session["name"] = new_name
+        flash("Account information successfully updated!", "flash-success")
+        return redirect(url_for('dashboard'))
+    else:
+        flash("Error when updating account information. Please try again later", "flash-error")
+        return redirect(url_for('dashboard'))
+        
 @app.route('/events')
 def events():
     return render_template('events.html')
