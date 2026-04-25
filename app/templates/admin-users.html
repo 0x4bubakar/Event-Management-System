@@ -1,0 +1,39 @@
+{% extends "layout-admin.html" %}
+{% block page_header %}Account Management{% endblock %}
+{% block admin_content %}
+<section class="dash-section">
+    <h2 class="header-2">Registered System Users</h2>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Force Password Reset</th>
+        </tr>
+        {% for user in users %}
+        <tr>
+            <td>{{ user.user_id }}</td>
+            <td>{{ user.name }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.role | capitalize }}</td>
+            <td>
+                <form method="POST" action="{{ url_for('admin_update_password') }}" style="display: flex; gap: 10px;">
+                    <input type="hidden" name="user_id" value="{{ user.user_id }}">
+                    <input type="password" name="new_password" placeholder="New Password" required style="padding: 5px;">
+                    <button type="submit" class="blue-btn" style="padding: 5px 10px;">Reset</button>
+                </form>
+                <form method="POST" action="{{ url_for('admin_delete_account') }}" style="display: flex; gap: 10px;">
+                    <input type="hidden" name="user_id" value="{{ user.user_id }}">
+                    <button class="red-btn" type="submit">Delete account</button>
+                </form>
+            </td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="5" style="text-align: center;">No users found.</td>
+        </tr>
+        {% endfor %}
+    </table>
+</section>
+{% endblock %}

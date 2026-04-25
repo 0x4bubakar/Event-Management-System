@@ -13,36 +13,39 @@
     <section class="dash-section">
         <h2 class="header-2">Account</h2>
         <form method="POST" action="{{ url_for('update_profile') }}">
-        <table>
-            <tr>
-                <th>Email</th>
-                <td class="view-mode">{{email}}</td>
-                <td class="edit-mode"><input name="email" type="email" value="{{email}}"></td>
-            </tr>
-            <tr>
-                <th>Name</th>
-                <td class="view-mode">{{name}}</td>
-                <td class="edit-mode"><input name="name" type="text" value="{{name}}"></td>
-            </tr>
-            <tr>
-                <th>Password</th>
-                <td class="view-mode">●●●●●●●●</td>
-                <td class="edit-mode"><input name="password" type="password"></td>
-            </tr>
-        </table>
-        <div class="view-mode">
-            <div class="btn-selector">
+            <table>
+                <tr>
+                    <th>Email</th>
+                    <td class="view-mode">{{email}}</td>
+                    <td class="edit-mode"><input name="email" type="email" value="{{email}}"></td>
+                </tr>
+                <tr>
+                    <th>Name</th>
+                    <td class="view-mode">{{name}}</td>
+                    <td class="edit-mode"><input name="name" type="text" value="{{name}}"></td>
+                </tr>
+                <tr>
+                    <th>Password</th>
+                    <td class="view-mode">●●●●●●●●</td>
+                    <td class="edit-mode"><input name="password" type="password" placeholder="New Password"></td>
+                </tr>
+            </table>
+
+            <div class="edit-mode">
+                <div class="btn-selector" style="margin-top: 15px;">
+                    <input type="submit" class="blue-btn" value="Save changes">
+                    <button class="red-btn" id="cancelBtn" type="button">Cancel</button>
+                </div>
+            </div>
+        </form> <div class="view-mode" style="margin-top: 15px;">
+            <div class="btn-selector" style="display: flex; gap: 10px;">
                 <button class="blue-btn" id="editBtn" type="button">Edit details</button>
-                <button class="red-btn" type="button">Delete account</button>
+                
+                <form method="POST" action="{{ url_for('delete_account') }}">
+                    <button class="red-btn" type="submit" onclick="return confirm('Are you sure you want to permanently delete your account? This cannot be undone.');">Delete account</button>
+                </form>
             </div>
         </div>
-        <div class="edit-mode">
-            <div class="btn-selector">
-                <input type="submit" class="blue-btn" value="Save changes">
-                <button class="red-btn" id="cancelBtn" type="button">Cancel</button>
-            </div>
-        </div>
-        </form>
     </section>
 
     <section class="dash-section">
@@ -69,7 +72,15 @@
                     <td>{{booking.booking_status}}</td>
                     <td>{{booking.final_price}}</td>
                     <td><button class="blue-btn">View Receipt</button></td>
-                    <td><button class="red-btn">Cancel Booking</button></td>
+                    <td>
+                    {% if booking.booking_status|lower != 'cancelled' %}
+                    <form method="POST" action="{{ url_for('cancel_booking_route', booking_id=booking.booking_id) }}" onsubmit="return confirm('Are you sure you want to cancel? Penalty fees may apply based on the event date.');">
+                        <button type="submit" class="red-btn">Cancel</button>
+                    </form>
+                    {% else %}
+                    <span style="color: #999; font-style: italic;">Cancelled</span>
+                    {% endif %}
+                </td>
                 </tr>
                 {% endfor %}
             </tbody>

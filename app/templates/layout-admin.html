@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+{% block title %}Admin Dashboard | Bristol Community Events{% endblock %}
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='user-dashboard.css') }}" />
+<link rel="stylesheet" href="{{ url_for('static', filename='admin-dashboard.css') }}" />
+{% endblock %}
+
+{% block body %}
+<div class="admin-nav">
+    <a href="{{url_for('admin_dashboard')}}">🏠 Admin Home</a>
+    <a href="{{url_for('admin_events')}}">📅 Event Management</a>
+    <a href="{{url_for('admin_users')}}">👥 Account Management</a>
+    <a href="{{url_for('admin_reports')}}">📊 Reports & Analytics</a>
+</div>
+<div class="content-container">
+    <h1 class="header-1">Admin Dashboard - {% block page_header %}{% endblock %}</h1>
+    {% block admin_content %}
+    {% endblock %}
+</div>
+{% endblock %}

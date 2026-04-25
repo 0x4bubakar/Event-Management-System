@@ -28,56 +28,34 @@ endblock %} {% block styles %}<link
 
 <br />
 
+{% if events %}
 <div id="content-container">
   <h1 style="text-align: center">Upcoming events</h1>
   <section id="events">
-    <a href="{{ url_for('event_details', event_id=1) }}" class="event-card">
-      <h2>Bristol City vs Bristol Rovers</h2>
-      <p>Ashton Gate Stadium<br />20/11/2025<br />£20-£79</p>
+    {% for event in events %}
+    <a href="{{ url_for('event_details', event_id=event.event_id) }}" class="event-card">
+      <h2>{{event.event_name}}</h2>
+      <p>{{event.location_name}}</p>
+      <p>{{event.start_date}} - {{event.end_date}}</p>
+      <p>£{{event.original_price}}</p>
     </a>
-
-    <a href="{{ url_for('event_details', event_id=2) }}" class="event-card">
-      <h2>BSides Bristol 2026</h2>
-      <p>
-        Bristol Business School, UWE Frenchay Campus<br />
-        01/09/2026 - 02/09/2026<br />
-        £5.50-£11.65
-      </p>
-    </a>
-
-    <a href="{{ url_for('event_details', event_id=3) }}" class="event-card">
-      <h2>Bristol Balloon Fiesta 2026</h2>
-      <p>Ashton Court<br />07/08/2026<br />Free</p>
-    </a>
-
-    <a href="{{ url_for('event_details', event_id=4) }}" class="event-card">
-      <h2>Bristol Film Festival</h2>
-      <p>
-        The Planetarium, We The Curious<br />
-        October - December 2025<br />
-        £11-£16
-      </p>
-    </a>
+    {% endfor %}
   </section>
 </div>
+{% endif %}
 
-<section id="signup-cta">
+<section id="signup-cta" style="">
   <h1>Why book with BCE?</h1>
   <div id="signup-cta-reasons">
     <div class="bce-perks">
       <h2>💰</h2>
       <p><b>Early bird discounts</b></p>
-      <p>Book X days ahead and save upto Y%!</p>
+      <p>Book ahead and save upto 20%!</p>
     </div>
     <div class="bce-perks">
       <h2>🎓</h2>
       <p><b>Student discount</b></p>
-      <p>X% off every booking when you verify with a valid .ac.uk email.</p>
-    </div>
-    <div class="bce-perks">
-      <h2>🧾</h2>
-      <p><b>Instant receipts</b></p>
-      <p>Download and print receipts of your bookings.</p>
+      <p>10% off every booking when you verify with a valid .ac.uk email.</p>
     </div>
   </div>
 </section> 

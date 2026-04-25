@@ -1,0 +1,11 @@
+.admin-nav {
+    background-color: #333; 
+    padding: 10px 2rem 10px 2rem; 
+    margin-bottom: 20px; 
+}
+
+.admin-nav a {
+    color: white; 
+    margin-right: 15px; 
+    text-decoration: none;
+}

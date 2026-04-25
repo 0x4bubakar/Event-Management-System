@@ -81,6 +81,40 @@ header {
   display: flex;
 }
 
+table {
+  display: block;
+  overflow-x: auto;
+  white-space: nowrap; 
+  width: 100%;
+  border-collapse: collapse; 
+  margin-bottom: 20px;
+}
+
+table th, table td {
+    text-align: left;
+    padding: 12px 5px; 
+    border: 1px solid black; 
+}
+
+table th {
+    font-weight: bold;
+    text-transform: uppercase; 
+    font-size: 0.85em;
+    letter-spacing: 0.5px;
+}
+
+form input[type="text"],
+form input[type="number"],
+form input[type="password"],
+form input[type="datetime-local"],
+form input[type="date"],
+form select,
+form textarea {
+    width: 100%;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+}
+
 /*desktop mode*/
 @media (min-width: 768px) {
   #menu-btn {
@@ -111,10 +145,21 @@ header {
     flex-direction: row;
     gap: 2rem;
   }
+
+  table {
+    display: table; 
+    white-space: normal;
+  }
+
+  form input, form select, form textarea {
+    width: auto;
+    margin-bottom: 0;
+  }
 }
 
 #flash-messages {
   list-style-type: none;
+  text-align: center;
 }
 
 .flash-success {
@@ -141,4 +186,50 @@ header {
 
 .edit-mode {
   display: none;
+}
+
+.blue-btn {
+  border: 1px solid #0074ff;
+  color: #0074ff;
+  background-color: transparent;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  text-decoration: none;
+  background-color: transparent;
+  transition: background-color 0.3s ease, transform 0.1s;
+}
+
+.blue-btn:hover {
+    border: transparent;
+    color: transparent;
+    background-color:#0074ff;
+}
+
+.red-btn {
+  border: 1px solid red;
+  color: red;
+  background-color: transparent;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  text-decoration: none;
+  background-color: transparent;
+  transition: background-color 0.3s ease, transform 0.1s;
+}
+
+.blue-btn:hover {
+    border: white;
+    color: white;
+    background-color:#0074ff;
+}
+
+.red-btn:hover {
+    border: white;
+    color: white;
+    background-color:red;
+}
+
+button:active {
+    transform: scale(0.98);
 }

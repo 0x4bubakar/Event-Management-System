@@ -1,19 +1,85 @@
-
-
-/* Filters */
+/* --- NEW SEARCH FORM STYLES --- */
 .filters {
   margin-bottom: 2rem;
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
 }
 
-.search-bar {
+.search-form-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: flex-end; /* Aligns the bottoms of the inputs to fix the slant */
+}
+
+.filter-group {
+  flex: 1;
+  min-width: 140px;
+  display: flex;
+  flex-direction: column;
+}
+
+.filter-group label {
+  font-size: 0.85rem;
+  font-weight: bold;
+  margin-bottom: 0.4rem;
+  color: #333;
+}
+
+/* Inherits your original search-bar aesthetic + fixes the slant */
+.search-input {
   width: 100%;
-  padding: 0.9rem;
+  padding: 0 0.9rem;
   font-size: 1rem;
   border-radius: 6px;
   border: 1px solid #ccc;
-  margin-bottom: 1rem;
+  height: 42px; /* Fixed height for alignment */
+  box-sizing: border-box; /* Crucial slant fix */
+  font-family: inherit;
+  background: #fff;
 }
 
+select.search-input {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.checkbox-group {
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+  height: 42px;
+  min-width: 100px;
+}
+
+.checkbox-group input {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+}
+
+.checkbox-group label {
+  margin: 0;
+  cursor: pointer;
+}
+
+.filter-actions {
+  display: flex;
+  gap: 0.5rem;
+  height: 42px;
+}
+
+.filter-actions button, .filter-actions a {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding: 0 1.5rem;
+  text-decoration: none;
+}
+
+/* --- YOUR ORIGINAL CSS --- */
 .categories {
   display: flex;
   gap: 0.7rem;
@@ -57,10 +123,19 @@
   transform: translateY(-3px);
 }
 
-.event-card img {
+/* Replaces your img tag with a colored box since there are no images in the DB */
+.event-img-placeholder {
   width: 100%;
   height: 180px;
-  object-fit: cover;
+  background: #0074ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: bold;
+  font-size: 1.5rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
 }
 
 .event-card .info {

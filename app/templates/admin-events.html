@@ -1,0 +1,171 @@
+{% extends "layout-admin.html" %}
+{% block page_header %}Event Management{% endblock %}
+
+{% block admin_content %}
+
+<section class="dash-section">
+    <h2 class="header-2">Create a new event</h2>
+    <form method="POST" action="{{ url_for('create_event') }}">
+        <table>
+                <tr>
+                    <th>Event Name</th>
+                    <td><input type="text" name="event_name" required></td>
+                </tr>
+                <tr>
+                    <th>Category</th>
+                    <td>
+                        <select name="category_id" id="category-select" required>
+                            <option value="" disabled selected>Select a Category</option>
+                            {% for cat in cats %}
+                                <option value="{{ cat.category_id }}">{{ cat.category_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Venue</th>
+                    <td>
+                        <select name="location_id" id="location-select" required>
+                            <option value="" disabled selected>Select a Venue</option>
+                            {% for loc in locs %}
+                                <option value="{{ loc.location_id }}">{{ loc.name }} (Cap: {{ loc.capacity }})</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Start Date & Time</th>
+                    <td><input type="datetime-local" name="start_date" required></td>
+                </tr>
+                <tr>
+                    <th>End Date & Time</th>
+                    <td><input type="datetime-local" name="end_date" required></td>
+                </tr>
+                <tr>
+                    <th>Booking Deadline</th>
+                    <td><input type="date" name="booking_deadline" required></td>
+                </tr>
+                <tr>
+                    <th>Conditions</th>
+                    <td><input type="text" name="conditions" placeholder="e.g. Formal Dress, 18+"></td>
+                </tr>
+                <tr>
+                    <th>Base Ticket Price (£)</th>
+                    <td><input type="number" step="0.01" name="original_price" min="0" required></td>
+                </tr>
+                <tr>
+                    <th>Description</th>
+                    <td><textarea name="description" rows="3" required></textarea></td>
+                </tr>
+            </table>
+            <div style="margin-top: 15px;">
+                <button type="submit" class="blue-btn">Publish Event</button>
+            </div>
+    </form>
+</section>
+
+<section class="dash-section">
+    <h2 class="header-2">Create a new venue</h2>
+    <form method="POST" action="{{ url_for('create_location') }}">
+        <input type="text" name="venue_name" placeholder="Venue Name" required >
+        <input type="number" name="capacity" placeholder="Capacity" min="1" required >
+        <input type="text" name="address" placeholder="Address" required >
+        <button type="submit" class="blue-btn">Save Venue</button>
+
+        <div style="margin: 15px 0px 15px 0px;">
+            {% if cats %}
+            <p><strong>Suitable for categories:</strong></p>
+            <br>
+            {% for cat in cats %}
+                <label style="margin-right: 15px; cursor: pointer;">
+                    <input type="checkbox" name="suitabilities" value="{{ cat.category_id }}"> 
+                    {{ cat.category_name }}
+                </label>
+            {% endfor %}
+            {% else %}
+            <p>You have no categories! Create some before creating a new venue!</p>
+            {% endif %}
+        </div>
+    </form>
+</section>
+
+<section class="dash-section">
+    <h2 class="header-2">Create a new category</h2>
+    <form method="POST" action="{{ url_for('create_category') }}">
+        <input type="text" name="category_name" placeholder="e.g. Concert" required>
+        <button type="submit" class="blue-btn">Save Category</button>
+    </form>
+</section>
+
+<section class="dash-section">
+    <h2 class="header-2">Manage Existing Events</h2>
+    {% if evts%}
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Event Name</th>
+            <th>Category</th>
+            <th>Venue</th>
+            <th>Date</th>
+            <th>Base Price</th>
+            <th>Actions</th>
+        </tr>
+        {% for evt in evts %}
+        <tr>
+            <td>{{ evt.event_id }}</td>
+            <td><strong>{{ evt.event_name }}</strong></td>
+            <td>{{ evt.category_name }}</td>
+            <td>{{ evt.location_name }}</td>
+            <td>{{ evt.start_date.strftime('%d %B %Y, %H:%M') }}</td>
+            <td>£{{ evt.original_price }}</td>
+            <td>
+                <form method="POST" action="{{ url_for('delete_event_route', event_id=evt.event_id) }}" onsubmit="return confirm('Are you sure you want to delete this event? This will also cancel all user bookings for it!');">
+                    <button type="submit" class="red-btn" style="padding: 5px 10px;">Delete</button>
+                </form>
+            </td>
+        </tr>
+        <tr>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <p>No events found in the database.</p>
+    {% endif %}
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const categorySelect = document.getElementById('category-select');
+        const locationSelect = document.getElementById('location-select');
+        const suitabilityMap = {{ suits | tojson | safe }};
+        
+        categorySelect.addEventListener('change', function() {
+            const selectedCategoryId = parseInt(this.value);
+            locationSelect.selectedIndex = 0;
+            
+            const validLocationIds = suitabilityMap
+                .filter(function(item) {
+                    return item.category_id === selectedCategoryId;
+                })
+                .map(function(item) {
+                    return item.location_id.toString();
+            });
+
+            for (let i = 0; i < locationSelect.options.length; i++) {
+                let locOption = locationSelect.options[i];
+                if (locOption.value === "") continue;
+                if (validLocationIds.includes(locOption.value)) {
+                    locOption.disabled = false;
+                    locOption.style.color = 'inherit';
+                } else {
+                    locOption.disabled = true;
+                    locOption.style.color = "#ccc";
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}
