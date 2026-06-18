@@ -5,10 +5,10 @@ Bristol Community Events (BCE) is a fictional organisation that would like to pr
 ## Criteria set out by Bristol Community Events
 Note: the following requirements have been taken from the assessment briefs offered by the module leaders. Subtle adjustments have been made for the sake of clarity.
 ### End-user perspective
-- [ ] End user features include Register/Login/Logout/password update; create, view, update and cancel booking.
+- [x] End user features include Register/Login/Logout/password update; create, view, update and cancel booking.
 - [x] System should allow end users to sign up and login to book an event and view all past and future bookings.
-- [ ] Users should be able to filter events based on specific categories e.g., exhibitions, workshops, sports events, etc. 
-- [ ] The search criteria could be single date, dates range/months, event category, free events, etc.
+- [x] Users should be able to filter events based on specific categories e.g., exhibitions, workshops, sports events, etc. 
+- [x] The search criteria could be single date, dates range/months, event category, free events, etc.
 - [x] Users should be able to view the details of the selected event(s). These details will include event name, date(s), ticket price (which can be zero for some events), event venue, any conditions (e.g., formal dress), remaining tickets left, deadline to book tickets by.
 - [ ] Continue with booking by singing up/login and generating and downloading booking receipt OR repeat the first step.
 - [x] Bookings can be made up to 2 months before the deadline. Advance booking discounts are allocated as follows:

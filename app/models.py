@@ -415,7 +415,7 @@ def get_event_by_id(event_id):
     finally:
         cursor.close()
 
-def get_public_events(category_id=None, start_date=None, end_date=None, is_free=None):
+def get_public_events(event_name, category_id, start_date, end_date, is_free):
     conn = db_connector.get_connection()
     cursor = conn.cursor(dictionary=True)
     
@@ -429,6 +429,11 @@ def get_public_events(category_id=None, start_date=None, end_date=None, is_free=
             WHERE e.start_date > NOW()
         """
         params = []
+
+        if event_name:
+            query += " AND e.event_name LIKE %s"
+            event_name = f"%{event_name}%"
+            params.append(event_name)
 
         if category_id:
             query += " AND e.category_id = %s"

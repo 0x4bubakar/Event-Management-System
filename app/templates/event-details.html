@@ -1,10 +1,11 @@
-{% extends "layout.html" %} {% block styles %}
-<link
-  rel="stylesheet"
-  href="{{ url_for('static', filename='event-details.css') }}"
-/>
-{% endblock %} {% block title %} {{ event.event_name }} | Bristol Community Events {% endblock %} {% block body %}
+{% extends "layout.html" %} 
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='event-details.css') }}" />
+{% endblock %} 
 
+{% block title %} {{ event.event_name }} | Bristol Community Events {% endblock %} 
+
+{% block body %}
 <div class="content-container">
   <h1 class="title" style="display: flex;">{{ event.event_name }}</a></h1>
 
@@ -24,34 +25,44 @@
     <p style="color: red; font-weight: bold; font-size: 1.2rem; margin-bottom: 15px;">FULLY BOOKED</p>
     <p style="margin-bottom: 15px;">All tickets have sold out, but you can still join the waiting list!</p>
     {% else %}
-    <p style="color: green; font-weight: bold; font-size: 1.2rem; margin-bottom: 15px;">{{ tickets_left }} tickets left - don't miss out and book now!</p>
+    <p style="color: green; font-weight: bold; font-size: 1.2rem; margin-bottom: 15px;">{{ tickets_left }} tickets left
+      - don't miss out and book now!</p>
     {% endif %}
 
   </div>
 
   <p class="desc">{{ event.description }}</p>
 
+  {% if not deadline_passed %}
   {% if not session.get('role') == 'admin' %}
   <form method="POST" action="{{ url_for('book_event', event_id=event.event_id) }}">
-  {% if not session.get('user_id') %}
+    {% if not session.get('user_id') %}
     <p style="margin-bottom: 15px; color: #666;">You must be logged in to book tickets.</p>
     <a href="{{ url_for('login') }}" class="blue-btn" style="text-decoration: none;">Log In to Book</a>
-  {% else %}
+    {% else %}
 
     <div style="margin-bottom: 15px;">
-        <label for="days_booked" style="font-weight: bold;">Number of Days:</label><br>
-        <input type="number" name="days_booked" id="days_booked" min="1" max="10" value="1" required style="padding: 10px; width: 100px; margin-top: 5px; text-align: center;">
+      <label for="days_booked" style="font-weight: bold;">Number of Days:</label><br>
+      <input type="number" name="days_booked" id="days_booked" min="1" max="10" value="1" required
+        style="padding: 10px; width: 100px; margin-top: 5px; text-align: center;">
     </div>
 
-    <div id="price-preview-box" style="margin-bottom: 20px; padding: 15px; background-color: #f8f9fa; border: 1px solid #ddd; border-radius: 5px; text-align: center; display: none;"></div>
+    <div id="price-preview-box"
+      style="margin-bottom: 20px; padding: 15px; background-color: #f8f9fa; border: 1px solid #ddd; border-radius: 5px; text-align: center; display: none;">
+    </div>
 
     {% if is_sold_out %}
-        <button type="submit" class="blue-btn">Join Waiting List</button>
+    <button type="submit" class="blue-btn">Join Waiting List</button>
     {% else %}
-        <button type="submit" class="blue-btn">Book Now</button>
+    <button type="submit" class="blue-btn">Book Now</button>
     {% endif %}
-  {% endif %}
+    {% endif %}
   </form>
+  {% else %}
+  <p>Admins can't book tickets! Please sign into a user account.</p>
+  {% endif %}
+  {% else %}
+  <p>The booking deadline has passed - you are no longer able to book!</p>
   {% endif %}
 </div>
 
@@ -59,18 +70,19 @@
 
 {% block scripts %}
 <script>
-document.addEventListener("DOMContentLoaded", function() {
-  const daysInput = document.getElementById('days_booked');
-  const previewBox = document.getElementById('price-preview-box');
-  
-  const basePrice = parseFloat("{{ event.original_price }}");
-  const discountMultiplier = parseFloat("{{ discount_multiplier }}") || 1; 
-  const isStudent = {{ 'true' if is_student else 'false' }};
-  
+  document.addEventListener("DOMContentLoaded", function () {
+    const daysInput = document.getElementById('days_booked');
+    const previewBox = document.getElementById('price-preview-box');
+
+    const basePrice = parseFloat("{{ event.original_price }}");
+    const discountMultiplier = parseFloat("{{ discount_multiplier }}") || 1;
+    const isStudent = {{ 'true' if is_student else 'false' }}
+  };
+
   function updatePrice() {
     if (!daysInput.value || daysInput.value < 1) {
-        previewBox.style.display = 'none';
-        return;
+      previewBox.style.display = 'none';
+      return;
     }
 
     const days = parseInt(daysInput.value);
@@ -79,27 +91,27 @@ document.addEventListener("DOMContentLoaded", function() {
     let htmlContent = "";
 
     if (discountMultiplier < 1) {
-        let discountedPrice = finalPrice * discountMultiplier;
-        let saved = finalPrice - discountedPrice;
-        finalPrice = discountedPrice;
-        
-        let displayPercent = Math.round((1 - discountMultiplier) * 100);
-        
-        htmlContent += `<p style="margin: 5px 0; color: #28a745; font-weight: bold;">Early Bird (${displayPercent}% Off): -£${saved.toFixed(2)}</p>`;
+      let discountedPrice = finalPrice * discountMultiplier;
+      let saved = finalPrice - discountedPrice;
+      finalPrice = discountedPrice;
+
+      let displayPercent = Math.round((1 - discountMultiplier) * 100);
+
+      htmlContent += `<p style="margin: 5px 0; color: #28a745; font-weight: bold;">Early Bird (${displayPercent}% Off): -£${saved.toFixed(2)}</p>`;
     }
-    
+
     if (isStudent) {
-        let studentPrice = finalPrice * 0.90;
-        let studentSaved = finalPrice - studentPrice;
-        finalPrice = studentPrice; 
-        
-        htmlContent += `<p style="margin: 5px 0; color: #007bff; font-weight: bold;">Student Discount (10% Off): -£${studentSaved.toFixed(2)}</p>`;
+      let studentPrice = finalPrice * 0.90;
+      let studentSaved = finalPrice - studentPrice;
+      finalPrice = studentPrice;
+
+      htmlContent += `<p style="margin: 5px 0; color: #007bff; font-weight: bold;">Student Discount (10% Off): -£${studentSaved.toFixed(2)}</p>`;
     }
 
     if (discountMultiplier < 1 || isStudent) {
-        htmlContent = `<p style="margin: 0; color: #666; text-decoration: line-through;">Subtotal: £${subtotal.toFixed(2)}</p>` + htmlContent;
+      htmlContent = `<p style="margin: 0; color: #666; text-decoration: line-through;">Subtotal: £${subtotal.toFixed(2)}</p>` + htmlContent;
     }
-    
+
     htmlContent += `<p style="margin: 10px 0 0 0; font-size: 1.2rem; font-weight: bold; color: #333;">Total to Pay: £${finalPrice.toFixed(2)}</p>`;
 
     previewBox.innerHTML = htmlContent;

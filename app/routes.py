@@ -29,8 +29,8 @@ def is_admin(f):
         if user_data and user_data['role'] == 'admin':
             return f(*args, **kwargs)
         else:
-            flash("Unauthorised access detected. Please log in.", "flash-error")
-            return redirect(url_for('login'))
+            flash("You are not authorised to view this page.", "flash-error")
+            return redirect(url_for('index'))
         
     return decorator
 
@@ -49,7 +49,7 @@ def page_not_found(error):
 @app.route('/')
 def index():
     if session.get("user_id"):
-        return render_template('events.html')
+        return redirect(url_for('events'))
     else:
         events = models.fetch_recent_events()
         return render_template('index.html', events=events)
@@ -93,8 +93,8 @@ def signup():
             flash("One of the fields are missing information. Please fill them in.", "flash-error")
     return render_template('login.html')
 
-@is_logged_in
 @app.route('/signout', methods=['GET'])
+@is_logged_in
 def signout():
     session.clear()
     return redirect(url_for('index'))
@@ -321,12 +321,13 @@ def admin_reports():
 
 @app.route('/events')
 def events():
+    event_name = request.args.get('event_name')
     category_id = request.args.get('category_id')
     start_date = request.args.get('start_date')
     end_date = request.args.get('end_date')
     is_free = request.args.get('is_free')
 
-    public_events = models.get_public_events(category_id, start_date, end_date, is_free)
+    public_events = models.get_public_events(event_name, category_id, start_date, end_date, is_free)
     categories = models.get_all_categories()
 
     return render_template('events.html', events=public_events, categories=categories)
@@ -343,6 +344,7 @@ def event_details(event_id):
 
     now = datetime.now()
     days_until_event = (event['start_date'] - now).days
+    deadline_passed = now >= event['booking_deadline']
 
     discount_multiplier = 1
     
@@ -359,7 +361,7 @@ def event_details(event_id):
 
     is_student = session.get('role') == 'student'
 
-    return render_template("event-details.html", event=event, tickets_left=tickets_left, is_sold_out=is_sold_out, discount_multiplier=discount_multiplier, is_student=is_student) 
+    return render_template("event-details.html", event=event, tickets_left=tickets_left, is_sold_out=is_sold_out, discount_multiplier=discount_multiplier, is_student=is_student, deadline_passed=deadline_passed) 
 
 @app.route("/category/<name>")
 def category(name):

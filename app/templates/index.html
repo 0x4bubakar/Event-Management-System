@@ -1,27 +1,20 @@
 {% extends "layout.html" %} {% block title %} Home | Bristol Community Events {%
-endblock %} {% block styles %}<link
-  rel="stylesheet"
-  href="{{ url_for('static', filename='index.css') }}"
-/>
+endblock %} {% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}" />
 {% endblock %} {% block body %}
 <section id="hero-container">
   <div id="hero-left">
     <div id="hero-text">
       <h1>Bristol's guide to what's on</h1>
-      <p>Discover, book, and experience Bristol's best-kept secrets. From gigs and artisan markets to the next big game - if it's happening it's on our radar!</p>
+      <p>Discover, book, and experience Bristol's best-kept secrets. From gigs and artisan markets to the next big game
+        - if it's happening it's on our radar!</p>
     </div>
     <div class="search">
-      <form>
-        <input
-          type="text"
-          placeholder="Where to next?"
-          size="30"
-        />
+      <form method="GET" action="{{url_for('events')}}">
+        <input type="text" placeholder="Where to next?" size="30" />
       </form>
 
-      <p id="hint">
-        <i>Try: "street food", "tech meetup", "open mic"</i>
-      </p>
+      <p><i><b>Try: "street food", "tech meetup", "open mic"</i></b></p>
     </div>
   </div>
 </section>
@@ -44,7 +37,7 @@ endblock %} {% block styles %}<link
 </div>
 {% endif %}
 
-<section id="signup-cta" style="">
+<section id="signup-cta">
   <h1>Why book with BCE?</h1>
   <div id="signup-cta-reasons">
     <div class="bce-perks">
@@ -58,5 +51,5 @@ endblock %} {% block styles %}<link
       <p>10% off every booking when you verify with a valid .ac.uk email.</p>
     </div>
   </div>
-</section> 
+</section>
 {% endblock %}

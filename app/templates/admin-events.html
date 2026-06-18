@@ -43,7 +43,7 @@
                 </tr>
                 <tr>
                     <th>Booking Deadline</th>
-                    <td><input type="date" name="booking_deadline" required></td>
+                    <td><input type="datetime-local" name="booking_deadline" required></td>
                 </tr>
                 <tr>
                     <th>Conditions</th>
@@ -131,6 +131,15 @@
     {% else %}
     <p>No events found in the database.</p>
     {% endif %}
+</section>
+
+<section class="dash-section">
+    <h2 class="header-2">Manage Existing Venues</h2>
+    {% if loc %}
+        {% for loc in locs %}
+        <h3>{{ loc.name }}</h3>
+        <p>{{loc.desc}}</p>
+        {% endfor %}
 </section>
 
 {% endblock %}

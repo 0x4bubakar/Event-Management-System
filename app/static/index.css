@@ -38,25 +38,7 @@
   line-height: 1.45;
 }
 
-.search {
-  width: 100%;
-}
 
-.search form input {
-  padding: 0.75rem 1rem;
-  width: 100%;
-  font-size: 1rem;
-  border-radius: 10px;
-}
-
-.search form input:focus {
-  outline: 2px solid #fff;
-} 
-
-#search #hint {
-  font-size: 0.9rem;
-  opacity: 0.8;
-}
 
 #events {
   display: grid;

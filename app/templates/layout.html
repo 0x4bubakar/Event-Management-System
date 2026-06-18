@@ -29,12 +29,13 @@
       <button id="menu-btn">☰</button>
       <nav id="nav-menu">
         <ul>
-          <li><a href="{{ url_for('index') }}">Home</a></li>
-          <li><a href="{{ url_for('events') }}">Events</a></li>
           {% if session["user_id"]: %}
+            <li><a href="{{ url_for('events') }}">Events</a></li>
             <li><a href="{{ url_for('dashboard') }}">My Dashboard</a></li>
             <li><a href="{{ url_for('signout') }}">Sign Out</a></li>
           {% else %}
+            <li><a href="{{ url_for('index') }}">Home</a></li>
+            <li><a href="{{ url_for('events') }}">Events</a></li>
             <li><a href="{{ url_for('login') }}">Login/Sign Up</a></li>
           {% endif %}
         </ul>

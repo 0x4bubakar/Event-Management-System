@@ -1,91 +1,96 @@
-{% extends "layout.html" %} 
+{% extends "layout.html" %}
 
 {% block styles %}
 <link rel="stylesheet" href="{{ url_for('static', filename='events.css') }}" />
-{% endblock %} 
+{% endblock %}
 
-{% block title %} Events | Bristol Community Events {% endblock %} 
+{% block title %} Events | Bristol Community Events {% endblock %}
 
 {% block body %}
 <div class="content-container">
-  {% if session.get("user_id"): %}
-  <h1 style="margin-bottom: 1.5rem;">Back for another journey, {{session.get("name")}}?</h1>
-  {% else %}
-  <h1 style="margin-bottom: 1.5rem;">Upcoming Events</h1>
-  {% endif %} 
+    {% if session.get("user_id"): %}
+    <h1 style="margin-bottom: 1.5rem;">Back for another journey, {{session.get("name")}}?</h1>
+    {% else %}
+    <h1 style="margin-bottom: 1.5rem;">Upcoming Events</h1>
+    {% endif %}
 
-  <div class="filters">
-    <form method="GET" action="{{ url_for('events') }}" class="search-form-grid">
-        
-        <div class="filter-group">
-            <label>Category</label>
-            <select name="category_id" class="search-input">
-                <option value="">All Categories</option>
-                {% for cat in categories %}
-                    <option value="{{ cat.category_id }}" {% if request.args.get('category_id') == cat.category_id|string %}selected{% endif %}>
+    <div class="filters">
+        <form method="GET" action="{{ url_for('events') }}" class="search-form-grid">
+
+            <div class="filter-group">
+                <label>Category</label>
+                <select name="category_id" class="search-input">
+                    <option value="">All Categories</option>
+                    {% for cat in categories %}
+                    <option value="{{ cat.category_id }}" {% if request.args.get('category_id')==cat.category_id|string
+                        %} selected {% endif %}>
                         {{ cat.category_name }}
                     </option>
-                {% endfor %}
-            </select>
-        </div>
+                    {% endfor %}
+                </select>
+            </div>
 
-        <div class="filter-group">
-            <label>From Date</label>
-            <input type="date" name="start_date" class="search-input" value="{{ request.args.get('start_date', '') }}">
-        </div>
+            <div class="filter-group">
+                <label>From Date</label>
+                <input type="date" name="start_date" class="search-input"
+                    value="{{ request.args.get('start_date', '') }}">
+            </div>
 
-        <div class="filter-group">
-            <label>To Date</label>
-            <input type="date" name="end_date" class="search-input" value="{{ request.args.get('end_date', '') }}">
-        </div>
+            <div class="filter-group">
+                <label>To Date</label>
+                <input type="date" name="end_date" class="search-input" value="{{ request.args.get('end_date', '') }}">
+            </div>
 
-        <div class="filter-group checkbox-group">
-            <input type="checkbox" name="is_free" id="is_free" {% if request.args.get('is_free') %}checked{% endif %}>
-            <label for="is_free">Free Only</label>
-        </div>
+            <div class="filter-group checkbox-group">
+                <input type="checkbox" name="is_free" id="is_free" {% if request.args.get('is_free') %}checked{% endif
+                    %}>
+                <label for="is_free">Free Only</label>
+            </div>
 
-        <div class="filter-actions">
-            <a href="{{ url_for('events') }}" class="red-btn">Clear</a>
-            <button type="submit" class="blue-btn">Search</button>
-        </div>
-        
-    </form>
-  </div>
+            <div class="filter-actions">
+                <a href="{{ url_for('events') }}" class="red-btn">Clear</a>
+                <button type="submit" class="blue-btn">Search</button>
+            </div>
 
-  <div class="events-grid">
-    {% for event in events %}
-    <a class="event-card" href="{{ url_for('event_details', event_id=event.event_id) }}">
-      
-      <div class="event-img-placeholder">
-          <span>{{ event.category_name }}</span>
-      </div>
-      
-      <div class="info">
-        <h3>{{ event.event_name }}</h3>
-        <p style="color: #666; font-size: 0.9rem; line-height: 1.4;">
-            <strong>📅</strong> {{ event.start_date.strftime('%d/%m/%Y') }}<br>
-            <strong>🎟️</strong> {% if event.original_price == 0 %}Free{% else %}£{{ "%.2f"|format(event.original_price) }}{% endif %}<br>
-            <strong>📍</strong> {{ event.location_name }}
-        </p>
-      </div>
-    </a>
-    
-    {% else %}
-    <div style="grid-column: 1 / -1; text-align: center; padding: 3rem; background: #fff; border-radius: 12px; box-shadow: 0 3px 10px rgba(0,0,0,0.1);">
-        <h2>No events found</h2>
-        <p style="color: #666; margin-top: 0.5rem;">Try clearing your filters to see more events.</p>
+        </form>
     </div>
-    {% endfor %}
-  </div>
+
+    <div class="events-grid">
+        {% for event in events %}
+        <a class="event-card" href="{{ url_for('event_details', event_id=event.event_id) }}">
+
+            <div class="event-img-placeholder">
+                <span>{{ event.category_name }}</span>
+            </div>
+
+            <div class="info">
+                <h3>{{ event.event_name }}</h3>
+                <p style="color: #666; font-size: 0.9rem; line-height: 1.4;">
+                    <strong>📅</strong> {{ event.start_date.strftime('%d/%m/%Y') }}<br>
+                    <strong>🎟️</strong> {% if event.original_price == 0 %}Free{% else %}£{{
+                    "%.2f"|format(event.original_price) }}{% endif %}<br>
+                    <strong>📍</strong> {{ event.location_name }}
+                </p>
+            </div>
+        </a>
+
+        {% else %}
+        <div
+            style="grid-column: 1 / -1; text-align: center; padding: 3rem; background: #fff; border-radius: 12px; box-shadow: 0 3px 10px rgba(0,0,0,0.1);">
+            <h2>No events found</h2>
+            <p style="color: #666; margin-top: 0.5rem;">Try clearing your filters to see more events.</p>
+        </div>
+        {% endfor %}
+    </div>
 </div>
 
 {% block scripts %}
 <script>
-  const btn = document.getElementById("menu-btn");
-  const menu = document.getElementById("nav-menu");
-  if(btn && menu) {
-      btn.addEventListener("click", () => menu.classList.toggle("open"));
-  }
+    const btn = document.getElementById("menu-btn");
+    const menu = document.getElementById("nav-menu");
+    if (btn && menu) {
+        btn.addEventListener("click", () => menu.classList.toggle("open"));
+    }
 </script>
 {% endblock %}
 {% endblock %}
