@@ -1,12 +1,12 @@
 import os
-from app import app, models
+from app import app
 from flask import Flask, redirect, render_template, url_for, request, flash, session
 from dotenv import load_dotenv
 from functools import wraps
 from datetime import datetime
-load_dotenv()
 
-app.secret_key = os.getenv("SECRET_KEY")
+from .app import models
+
 
 # ========== AUTH LOGIC ==========
 
