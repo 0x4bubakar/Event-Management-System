@@ -15,7 +15,7 @@
     {% endif %}
 
     <div class="filters">
-        <form method="GET" action="{{ url_for('events') }}" class="search-form-grid">
+        <form method="GET" action="{{ url_for('events.events') }}" class="search-form-grid">
 
             <div class="filter-group">
                 <label>Category</label>
@@ -48,7 +48,7 @@
             </div>
 
             <div class="filter-actions">
-                <a href="{{ url_for('events') }}" class="red-btn">Clear</a>
+                <a href="{{ url_for('events.events') }}" class="red-btn">Clear</a>
                 <button type="submit" class="blue-btn">Search</button>
             </div>
 
@@ -57,7 +57,7 @@
 
     <div class="events-grid">
         {% for event in events %}
-        <a class="event-card" href="{{ url_for('event_details', event_id=event.event_id) }}">
+        <a class="event-card" href="{{ url_for('events.event_details', event_id=event.event_id) }}">
 
             <div class="event-img-placeholder">
                 <span>{{ event.category_name }}</span>

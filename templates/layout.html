@@ -15,14 +15,14 @@
       <h1 id="desktop-logo">
         <a
           style="text-decoration: none; color: black"
-          href="{{ url_for('index') }}"
+          href="{{ url_for('main.index') }}"
           >Bristol Community Events</a
         >
       </h1>
       <h1 id="mobile-logo">
         <a
           style="text-decoration: none; color: black"
-          href="{{ url_for('index') }}"
+          href="{{ url_for('main.index') }}"
           >BCE</a
         >
       </h1>
@@ -30,13 +30,13 @@
       <nav id="nav-menu">
         <ul>
           {% if session["user_id"]: %}
-            <li><a href="{{ url_for('events') }}">Events</a></li>
-            <li><a href="{{ url_for('dashboard') }}">My Dashboard</a></li>
-            <li><a href="{{ url_for('signout') }}">Sign Out</a></li>
+            <li><a href="{{ url_for('events.events') }}">Events</a></li>
+            <li><a href="{{ url_for('users.dashboard') }}">My Dashboard</a></li>
+            <li><a href="{{ url_for('auth.signout') }}">Sign Out</a></li>
           {% else %}
-            <li><a href="{{ url_for('index') }}">Home</a></li>
-            <li><a href="{{ url_for('events') }}">Events</a></li>
-            <li><a href="{{ url_for('login') }}">Login/Sign Up</a></li>
+            <li><a href="{{ url_for('main.index') }}">Home</a></li>
+            <li><a href="{{ url_for('events.events') }}">Events</a></li>
+            <li><a href="{{ url_for('auth.login') }}">Login/Sign Up</a></li>
           {% endif %}
         </ul>
       </nav>

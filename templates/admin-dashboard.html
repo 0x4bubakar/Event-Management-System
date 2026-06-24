@@ -5,7 +5,7 @@
 <section class="dash-section">
     <h2 class="header-2">Live Event Status</h2>
     {% if not eventstat %}
-    <p>It appears that there are no upcoming events! Why not create some <a href="{{url_for('admin_events')}}">here</a>?</p>
+    <p>It appears that there are no upcoming events! Why not create some <a href="{{url_for('admin.admin_events')}}">here</a>?</p>
     {% else %}
     <table>
         <tr>

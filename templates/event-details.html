@@ -35,10 +35,10 @@
 
   {% if not deadline_passed %}
   {% if not session.get('role') == 'admin' %}
-  <form method="POST" action="{{ url_for('book_event', event_id=event.event_id) }}">
+  <form method="POST" action="{{ url_for('booking.book_event', event_id=event.event_id) }}">
     {% if not session.get('user_id') %}
     <p style="margin-bottom: 15px; color: #666;">You must be logged in to book tickets.</p>
-    <a href="{{ url_for('login') }}" class="blue-btn" style="text-decoration: none;">Log In to Book</a>
+    <a href="{{ url_for('main.login') }}" class="blue-btn" style="text-decoration: none;">Log In to Book</a>
     {% else %}
 
     <div style="margin-bottom: 15px;">

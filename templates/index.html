@@ -10,7 +10,7 @@ endblock %} {% block styles %}
         - if it's happening it's on our radar!</p>
     </div>
     <div class="search">
-      <form method="GET" action="{{url_for('events')}}">
+      <form method="GET" action="{{url_for('events.events')}}">
         <input type="text" placeholder="Where to next?" size="30" />
       </form>
 
@@ -26,7 +26,7 @@ endblock %} {% block styles %}
   <h1 style="text-align: center">Upcoming events</h1>
   <section id="events">
     {% for event in events %}
-    <a href="{{ url_for('event_details', event_id=event.event_id) }}" class="event-card">
+    <a href="{{ url_for('events.event_details', event_id=event.event_id) }}" class="event-card">
       <h2>{{event.event_name}}</h2>
       <p>{{event.location_name}}</p>
       <p>{{event.start_date}} - {{event.end_date}}</p>
