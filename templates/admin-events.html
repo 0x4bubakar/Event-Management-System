@@ -129,7 +129,7 @@
         {% endfor %}
     </table>
     {% else %}
-    <p>No events found in the database.</p>
+    <p>No existing events.</p>
     {% endif %}
 </section>
 
@@ -138,7 +138,8 @@
     {% if loc %}
         {% for loc in locs %}
         <h3>{{ loc.name }}</h3>
-        <p>{{loc.desc}}</p>
+        <p>Venue Capacity{{loc.capacity}}</p>
+        <button class="btn">Edit location details</button>
         {% endfor %}
     {% else %}
     <p>No venues exist.</p>
