@@ -7,7 +7,7 @@
 
 {% block body %}
 <div class="content-container">
-  <h1 class="title" style="display: flex;">{{ event.event_name }}</a></h1>
+  <h1 class="title" style="display: flex;">{{ event.event_name }}</h1>
 
 
   <div class="details">
@@ -43,7 +43,7 @@
 
     <div style="margin-bottom: 15px;">
       <label for="days_booked" style="font-weight: bold;">Number of Days:</label><br>
-      <input type="number" name="days_booked" id="days_booked" min="1" max="10" value="1" required
+      <input type="number" name="days_booked" id="days_booked" min="1" max="{{total_event_days}}" value="1" required
         style="padding: 10px; width: 100px; margin-top: 5px; text-align: center;">
     </div>
 
@@ -52,9 +52,9 @@
     </div>
 
     {% if is_sold_out %}
-    <button type="submit" class="blue-btn">Join Waiting List</button>
+    <button type="submit" class="blue-btn book-btn">Join Waiting List</button>
     {% else %}
-    <button type="submit" class="blue-btn">Book Now</button>
+    <button type="submit" class="blue-btn book-btn">Book Now</button>
     {% endif %}
     {% endif %}
   </form>
@@ -73,53 +73,54 @@
   document.addEventListener("DOMContentLoaded", function () {
     const daysInput = document.getElementById('days_booked');
     const previewBox = document.getElementById('price-preview-box');
+    const basePrice = parseFloat("{{event.original_price}}");
+    const totalEventDays = parseInt("{{total_event_days}}", 10);
+    const discountMultiplier = parseFloat("{{discount_multiplier}}") || 1;
+    const isStudent = "{{'true' if is_student else 'false'}}" === "true";
+    const bookBtn = document.querySelector('.book-btn');
+    const basePricePerDay = basePrice / totalEventDays;
+    
+    function updatePrice() {
+      let htmlContent = "";
+      const daysBooked = parseInt(daysInput.value, 10);
+      
+      if (!daysBooked || daysBooked < 1) {
+        previewBox.style.display = 'none';
+        bookBtn.style.display = 'none';
+        return;
+      }
 
-    const basePrice = parseFloat("{{ event.original_price }}");
-    const discountMultiplier = parseFloat("{{ discount_multiplier }}") || 1;
-    const isStudent = {{ 'true' if is_student else 'false' }}
-  };
+      let subtotal = basePricePerDay * daysBooked;
+      let finalPrice = subtotal;
+      let discountedPrice, displayPercent, saved;
 
-  function updatePrice() {
-    if (!daysInput.value || daysInput.value < 1) {
-      previewBox.style.display = 'none';
-      return;
+      htmlContent += `<p class="discount">You are about to book ${daysBooked} out ${totalEventDays} days.</p>`;
+      htmlContent += `<p class="discount">(${daysBooked} / ${totalEventDays}) * £${basePrice.toFixed(2)} = £${finalPrice}</p>`;
+      
+      if (discountMultiplier < 1) {
+        discountedPrice = finalPrice * discountMultiplier;
+        saved = finalPrice - discountedPrice;
+        finalPrice = discountedPrice;
+        displayPercent = Math.round((1 - discountMultiplier) * 100);
+        htmlContent += `<p class="discount">"Discount: ${displayPercent}% off (-£${saved})"</p>`;
+      }
+
+      if (isStudent) {
+        discountedPrice = finalPrice * 0.9;
+        saved = finalPrice - discountedPrice;
+        finalPrice = discountedPrice;
+        htmlContent += `<p class="discount">Student Discount: 10% off (-£${saved})</p>`;
+      }
+
+      htmlContent += `<p><b>Final price: £${finalPrice}</b></p>`
+      previewBox.innerHTML = htmlContent;
+      previewBox.style.display = 'block';
     }
 
-    const days = parseInt(daysInput.value);
-    let subtotal = basePrice * days;
-    let finalPrice = subtotal;
-    let htmlContent = "";
-
-    if (discountMultiplier < 1) {
-      let discountedPrice = finalPrice * discountMultiplier;
-      let saved = finalPrice - discountedPrice;
-      finalPrice = discountedPrice;
-
-      let displayPercent = Math.round((1 - discountMultiplier) * 100);
-
-      htmlContent += `<p style="margin: 5px 0; color: #28a745; font-weight: bold;">Early Bird (${displayPercent}% Off): -£${saved.toFixed(2)}</p>`;
+    if (daysInput) {
+      daysInput.addEventListener('input', updatePrice);
+      updatePrice();
     }
-
-    if (isStudent) {
-      let studentPrice = finalPrice * 0.90;
-      let studentSaved = finalPrice - studentPrice;
-      finalPrice = studentPrice;
-
-      htmlContent += `<p style="margin: 5px 0; color: #007bff; font-weight: bold;">Student Discount (10% Off): -£${studentSaved.toFixed(2)}</p>`;
-    }
-
-    if (discountMultiplier < 1 || isStudent) {
-      htmlContent = `<p style="margin: 0; color: #666; text-decoration: line-through;">Subtotal: £${subtotal.toFixed(2)}</p>` + htmlContent;
-    }
-
-    htmlContent += `<p style="margin: 10px 0 0 0; font-size: 1.2rem; font-weight: bold; color: #333;">Total to Pay: £${finalPrice.toFixed(2)}</p>`;
-
-    previewBox.innerHTML = htmlContent;
-    previewBox.style.display = 'block';
-  }
-
-  updatePrice();
-  daysInput.addEventListener('input', updatePrice);
-});
+    });
 </script>
 {% endblock %}

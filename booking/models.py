@@ -8,10 +8,17 @@ def create_booking(user_id, event_id, days_booked):
 
     user_data = get_user_by_id(user_id)
     is_student = user_data and user_data['role'] == 'student'
+    now = datetime.now()
+
+    if not (isinstance(days_booked, int)):
+        return False, "Number of days booked can only be whole numbers."
+    else:
+        if days_booked <= 0:
+            return False, "You can only book a positive number of days."
 
     try:
         query = """
-            SELECT e.original_price, e.start_date, e.booking_deadline, l.capacity,
+            SELECT e.original_price, e.start_date, e.end_date, e.booking_deadline, l.capacity,
             (SELECT COUNT(*) FROM booking b WHERE b.event_id = e.event_id AND b.status='confirmed') AS tickets_sold
             FROM event e
             JOIN location l on e.location_id = l.location_id
@@ -20,32 +27,35 @@ def create_booking(user_id, event_id, days_booked):
 
         cursor.execute(query, (event_id,))
         event = cursor.fetchone()
+        event_length = (event['end_date'].date() - event['start_date'].date()).days
 
+        if days_booked > event_length:
+            return False, "Tickets can only be booked for the duration of the event."
+        
         if not event:
             return False, "Event doesn't exist."
         
-        now = datetime.now()
 
-        if now.date() > event['booking_deadline']:
+        if now > event['booking_deadline']:
             return False, "The booking deadline has passed."
         
 
-        days_booked = int(days_booked)
-        base_price = float(event['original_price']) * days_booked
-        final_price = base_price
+
+        base_price_per_day = float(event['original_price']) / event_length
+        final_price = base_price_per_day * days_booked
 
         days_until_event = (event['start_date'] - now).days
     
         if days_until_event > 60:
-            final_price = base_price * 0.8
+            final_price = final_price * 0.8
         if days_until_event > 50  and days_until_event <= 60:
-            final_price = base_price * 0.8
+            final_price = final_price * 0.8
         elif days_until_event > 35 and days_until_event <= 50:
-            final_price = base_price * 0.85
+            final_price = final_price * 0.85
         elif days_until_event > 25 and days_until_event <= 35:
-            final_price = base_price * 0.9
+            final_price = final_price * 0.9
         elif days_until_event > 15 and days_until_event <= 25:
-            final_price = base_price * 0.95
+            final_price = final_price * 0.95
 
         if is_student:
             final_price = final_price * 0.90

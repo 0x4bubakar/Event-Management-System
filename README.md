@@ -22,7 +22,7 @@ Note: the following requirements have been taken from the assessment briefs offe
 |Between 15 and 25 days|5%|
 |Less than 15 days|No discount|
 
-- [ ] Some events can run on multiple days, and each day incurs part of the cost. For instance, Bristol Balloon fiesta may run for a week. If the total price for a week is £70, then each day costs £10 for attendees. Therefore, the price per day can be calculated by the total price divided by the number of days.
+- [x] Some events can run on multiple days, and each day incurs part of the cost. For instance, Bristol Balloon fiesta may run for a week. If the total price for a week is £70, then each day costs £10 for attendees. Therefore, the price per day can be calculated by the total price divided by the number of days.
 
 - [ ] If all tickets have been booked for an event, then the user is automatically placed on a waiting list alongside a timestamp. If x more spaces become available (i.e. someone cancels their booking or if more spaces are added) - then the first x people who are on the waiting list are booked.
 

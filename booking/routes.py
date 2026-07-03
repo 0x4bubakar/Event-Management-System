@@ -12,7 +12,7 @@ def book_event(event_id):
         return redirect(url_for('events.events'))
 
     user_id = session.get('user_id')
-    days_booked = request.form.get('days_booked')
+    days_booked = int(request.form.get('days_booked'))
 
     success, message = create_booking(user_id, event_id, days_booked)
 
@@ -21,7 +21,7 @@ def book_event(event_id):
             flash(message, "flash-info") 
         else:
             flash(message, "flash-success")
-        return redirect(url_for('user.dashboard')) 
+        return redirect(url_for('users.dashboard')) 
     else:
         flash(message, "flash-error")
         return redirect(url_for('events.event_details', event_id=event_id))
@@ -38,4 +38,4 @@ def cancel_booking_route(booking_id):
     else:
         flash(message, "flash-error")
         
-    return redirect(url_for('user.dashboard'))
+    return redirect(url_for('users.dashboard'))

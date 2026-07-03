@@ -24,6 +24,7 @@ def event_details(event_id):
         flash("Event not found", "flash-error")
         return redirect(url_for('events.events'))
     
+    total_event_days = (event['end_date'].date() - event['start_date'].date()).days
     tickets_left = event['capacity'] - event['tickets_sold']
     is_sold_out = tickets_left <= 0
 
@@ -46,7 +47,7 @@ def event_details(event_id):
 
     is_student = session.get('role') == 'student'
 
-    return render_template("event-details.html", event=event, tickets_left=tickets_left, is_sold_out=is_sold_out, discount_multiplier=discount_multiplier, is_student=is_student, deadline_passed=deadline_passed) 
+    return render_template("event-details.html", event=event, total_event_days=total_event_days, tickets_left=tickets_left, is_sold_out=is_sold_out, discount_multiplier=discount_multiplier, is_student=is_student, deadline_passed=deadline_passed) 
 
 @events_bp.route("/category/<name>")
 def category(name):
