@@ -104,7 +104,30 @@ def get_bookings_by_id(user_id):
     cursor = conn.cursor()
 
     try:
-        query = "SELECT event.event_name, event.start_date, booking.days_booked, booking.status, booking.final_price, booking.booking_id FROM booking JOIN event ON booking.event_id = event.event_id WHERE booking.user_id = %s"
+        query = """
+        SELECT 
+            event.event_name, 
+            event.start_date, 
+            booking.days_booked, 
+            booking.status, 
+            (booking.booked_base_price - COALESCE(SUM(booking_discounts.amount_deducted),0)) as final_price, 
+            booking.booking_id 
+        FROM 
+            booking 
+        JOIN 
+            event ON booking.event_id = event.event_id 
+        LEFT JOIN 
+            booking_discounts ON booking.booking_id = booking_discounts.booking_id
+        WHERE 
+            booking.user_id = %s
+        GROUP BY
+            booking.booking_id,
+            event.event_name,
+            event.start_date,
+            booking.days_booked,
+            booking.status,
+            booking.booked_base_price
+        """
         cursor.execute(query, (user_id,))
         records = cursor.fetchall()
 
@@ -116,7 +139,7 @@ def get_bookings_by_id(user_id):
                 "start_date": row[1],
                 "days_booked": row[2],
                 "booking_status": row[3],
-                "final_price": row[4],
+                "final_price": float(row[4]),
                 "booking_id": row[5]
             })
 
