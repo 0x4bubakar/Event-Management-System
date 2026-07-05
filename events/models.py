@@ -85,7 +85,7 @@ def get_applicable_discounts(event_id, days_until_event, is_student):
         
         # event-specific discounts
         cursor.execute("SELECT name, percent FROM discount WHERE event_id = %s", (event_id,))
-        event_discounts = cursor.fetchall
+        event_discounts = cursor.fetchall()
 
         for d in event_discounts:
             applicable_discounts.append({

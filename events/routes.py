@@ -34,9 +34,10 @@ def event_details(event_id):
 
     discount_multiplier = 1
     
+    is_student = session.get('role') == 'student'
+    
     applicable_discounts = get_applicable_discounts(event_id, days_until_event, is_student)
 
-    is_student = session.get('role') == 'student'
 
     return render_template("event-details.html", 
                            event=event,
