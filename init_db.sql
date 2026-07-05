@@ -217,7 +217,7 @@ INSERT INTO discount(name, percent, event_id) VALUES
   ('Early Bird 15', 15, NULL),
   ('Early Bird 10', 10, NULL),
   ('Early Bird 5', 5, NULL),
-  ("Student 10", 10, NULL)
+  ("Student 10", 10, NULL);
 
 
 -- -----------------------------------------------------
