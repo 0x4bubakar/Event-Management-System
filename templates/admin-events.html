@@ -66,7 +66,7 @@
 
 <section class="dash-section">
     <h2 class="header-2">Create a new venue</h2>
-    <form method="POST" action="{{ url_for('admin.create_location') }}">
+    <form method="POST" action="{{ url_for('admin.create_location_route') }}">
         <input type="text" name="venue_name" placeholder="Venue Name" required >
         <input type="number" name="capacity" placeholder="Capacity" min="1" required >
         <input type="text" name="address" placeholder="Address" required >
@@ -91,7 +91,7 @@
 
 <section class="dash-section">
     <h2 class="header-2">Create a new category</h2>
-    <form method="POST" action="{{ url_for('admin.create_category') }}">
+    <form method="POST" action="{{ url_for('admin.create_category_route') }}">
         <input type="text" name="category_name" placeholder="e.g. Concert" required>
         <button type="submit" class="blue-btn">Save Category</button>
     </form>

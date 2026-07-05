@@ -18,12 +18,12 @@
             <td>{{ user.email }}</td>
             <td>{{ user.role | capitalize }}</td>
             <td>
-                <form method="POST" action="{{ url_for('admin.admin_update_password') }}" style="display: flex; gap: 10px;">
+                <form method="POST" action="{{ url_for('admin.admin_update_password_route') }}" style="display: flex; gap: 10px;">
                     <input type="hidden" name="user_id" value="{{ user.user_id }}">
                     <input type="password" name="new_password" placeholder="New Password" required style="padding: 5px;">
                     <button type="submit" class="blue-btn" style="padding: 5px 10px;">Reset</button>
                 </form>
-                <form method="POST" action="{{ url_for('admin.admin_delete_account') }}" style="display: flex; gap: 10px;">
+                <form method="POST" action="{{ url_for('admin.admin_delete_account_route') }}" style="display: flex; gap: 10px;">
                     <input type="hidden" name="user_id" value="{{ user.user_id }}">
                     <button class="red-btn" type="submit">Delete account</button>
                 </form>
