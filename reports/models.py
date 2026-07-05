@@ -10,7 +10,7 @@ def get_revenue_reports():
             COUNT(b.booking_id) AS total_bookings,
             COALESCE(SUM(b.final_price), 0) AS total_revenue
             FROM event e
-            LEFT JOIN booking b ON event.event_id = b.event_id AND b.status != 'cancelled'
+            LEFT JOIN booking b ON event.event_id = b.event_id AND b.status = 'confirmed'
             GROUP BY e.event_id, e.event_name, e.start_date
             ORDER BY e.start_date DESC
         """

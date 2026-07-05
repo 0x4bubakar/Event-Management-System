@@ -39,7 +39,16 @@ def new_event():
     original_price = request.form.get("original_price")
     description = request.form.get("description")
 
-    if create_event(location_id, event_name, start_date, end_date, conditions, booking_deadline, description, category_id, original_price):
+    if create_event(location_id=location_id, 
+        category_id=category_id, 
+        organiser_id=None, # explicitly passing none as creator is an admin, not an organiser
+        event_name=event_name, 
+        start_date=start_date, 
+        end_date=end_date, 
+        conditions=conditions, 
+        booking_deadline=booking_deadline, 
+        description=description, 
+        original_price=original_price):
         flash("Event successfully created.", "flash-success")
     else:
         flash("Failed to create event.", "flash-error")

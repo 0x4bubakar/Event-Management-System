@@ -13,8 +13,9 @@ def book_event(event_id):
 
     user_id = session.get('user_id')
     days_booked = int(request.form.get('days_booked'))
-
-    success, message = create_booking(user_id, event_id, days_booked)
+    attendee_name = request.form.get('attendee_name')
+    
+    success, message = create_booking(user_id, event_id, days_booked, attendee_name)
 
     if success:
         if "waitlist" in message.lower():

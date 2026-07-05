@@ -1,5 +1,5 @@
 from flask import Blueprint, redirect, render_template, url_for, request, flash, session
-from .models import get_public_events, get_all_categories, get_event_by_id
+from .models import *
 from datetime import datetime
 
 events_bp = Blueprint('events', __name__)
@@ -24,7 +24,7 @@ def event_details(event_id):
         flash("Event not found", "flash-error")
         return redirect(url_for('events.events'))
     
-    total_event_days = (event['end_date'].date() - event['start_date'].date()).days
+    total_event_days = (event['end_date'].date() - event['start_date'].date()).days + 1
     tickets_left = event['capacity'] - event['tickets_sold']
     is_sold_out = tickets_left <= 0
 
@@ -34,20 +34,19 @@ def event_details(event_id):
 
     discount_multiplier = 1
     
-    if days_until_event > 60:
-        discount_multiplier = 0.8
-    elif 50 < days_until_event <= 60:
-        discount_multiplier = 0.8
-    elif 35 < days_until_event <= 50:
-        discount_multiplier = 0.85
-    elif 25 < days_until_event <= 35:
-        discount_multiplier = 0.9
-    elif 15 < days_until_event <= 25:
-        discount_multiplier = 0.95
+    applicable_discounts = get_applicable_discounts(event_id, days_until_event, is_student)
 
     is_student = session.get('role') == 'student'
 
-    return render_template("event-details.html", event=event, total_event_days=total_event_days, tickets_left=tickets_left, is_sold_out=is_sold_out, discount_multiplier=discount_multiplier, is_student=is_student, deadline_passed=deadline_passed) 
+    return render_template("event-details.html", 
+                           event=event,
+                           total_event_days=total_event_days, 
+                           tickets_left=tickets_left, 
+                           is_sold_out=is_sold_out, 
+                           discount_multiplier=discount_multiplier, 
+                           is_student=is_student, 
+                           deadline_passed=deadline_passed,
+                           applicable_discounts=applicable_discounts)
 
 @events_bp.route("/category/<name>")
 def category(name):

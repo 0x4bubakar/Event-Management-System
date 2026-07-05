@@ -1,6 +1,7 @@
 import db_connector
 from datetime import datetime
 from users.models import get_user_by_id
+from events.models import get_applicable_discounts
 
 def create_booking(user_id, event_id, days_booked, attendee_name):
     conn = db_connector.get_connection()
@@ -57,55 +58,18 @@ def create_booking(user_id, event_id, days_booked, attendee_name):
         booking_id = cursor.lastrowid
         
         days_until_event = (event['start_date'] - now).days
-        discounts_to_apply = []
-        
-        if days_until_event > 50 and days_until_event <= 60:
-            discounts_to_apply.append("Early Bird 20")
-        elif days_until_event > 35:
-            discounts_to_apply.append("Early Bird 15")
-        elif days_until_event > 25:
-            discounts_to_apply.append("Early Bird 10")
-        elif days_until_event > 15:
-            discounts_to_apply.append("Early Bird 5")
-
-        if is_student:
-            discounts_to_apply.append("Student 10")
-        
         current_price = booked_base_price
-
-        # standard discounts
-        for discount in discounts_to_apply: 
-            cursor.execute("SELECT discount_id, percent FROM discount WHERE name = %s and event_id IS NULL", (discount,)) # check the discounts exist in the discount table
-            discount_record = cursor.fetchone()
-
-            if discount_record:
-                percent_decimal = float(discount_record['percent']) / 100.0
-                amount_deducted = current_price * percent_decimal
-
-                cursor.execute("""
-                    INSERT INTO booking_discounts (booking_id, discount_id, amount_deducted)
-                    VALUES (%s, %s, %s)
-                """, (booking_id, discount_record['discount_id'], amount_deducted))
-
-                current_price -= amount_deducted
         
+        discounts = get_applicable_discounts(event_id, days_until_event, is_student)
+        for discount in discounts:
+            amount_deducted = booked_base_price * discount['percent']
+            cursor.execute("""
+                INSERT INTO booking_discounts (booking_id, discount_id, amount_deducted)
+                VALUES (%s, %s, %s)
+            """, booking_id, discount['discount_id'], amount_deducted)
 
-        # event-specific discounts
-        cursor.execute("SELECT discount_id, percent FROM discount WHERE event_id=%s", (event_id,))
-        event_specific_discounts = cursor.fetchall()
+            current_price -= amount_deducted
 
-        if event_specific_discounts:
-            for discount in event_specific_discounts:
-                percent_decimal = float(discount['percent']) / 100.0
-                amount_deducted = current_price * percent_decimal
-
-                cursor.execute("""
-                    INSERT INTO booking_discounts (booking_id, discount_id, amount_deducted)
-                    VALUES (%s, %s, %s)
-                """, (booking_id, discount['discount_id'], amount_deducted))
-
-                current_price -= amount_deducted
-        
         conn.commit()
         
         if status == 'waitlisted':

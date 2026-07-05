@@ -35,7 +35,7 @@ def get_current_event_statuses():
     try:
         query = """
             SELECT e.event_id, e.event_name, e.start_date, l.capacity,
-            (SELECT COUNT(*) FROM booking b WHERE b.event_id = e.event_id AND b.status != 'cancelled') AS tickets_sold
+            (SELECT COUNT(*) FROM booking b WHERE b.event_id = e.event_id AND b.status = 'confirmed') AS tickets_sold
             FROM event e
             JOIN location l on e.location_id = l.location_id
             WHERE e.start_date > NOW()
@@ -51,17 +51,86 @@ def get_current_event_statuses():
     finally:
         cursor.close()
 
-def create_event(location_id, event_name, start_date, end_date, conditions, booking_deadline, description, category_id, original_price):
+def get_applicable_discounts(event_id, days_until_event, is_student):
+    conn = db_connector.get_connection()
+    cursor = conn.cursor(dictionary=True)
+    
+    discounts_to_apply = []
+
+    if days_until_event > 50 and days_until_event <= 60:
+        discounts_to_apply.append("Early Bird 20")
+    elif days_until_event > 35:
+        discounts_to_apply.append("Early Bird 15")
+    elif days_until_event > 25:
+        discounts_to_apply.append("Early Bird 10")
+    elif days_until_event > 15:
+        discounts_to_apply.append("Early Bird 5")
+
+    if is_student:
+        discounts_to_apply.append("Student 10")
+    
+    applicable_discounts = []
+
+    try:
+        # discounts that aren't event-specific (event_id is null)
+        for discount_name in discounts_to_apply:
+            cursor.execute("SELECT discount_id, percent FROM discount WHERE name = %s and event_id IS NULL", (discount_name,)) # check the discounts exist in the discount table
+            record = cursor.fetchone()
+            if record:
+                applicable_discounts.append({
+                    "id": record['discount_id'],
+                    "name": record['name'], 
+                    "percent": float(record['percent'])/100.0
+                    })
+        
+        # event-specific discounts
+        cursor.execute("SELECT name, percent FROM discount WHERE event_id = %s", (event_id,))
+        event_discounts = cursor.fetchall
+
+        for d in event_discounts:
+            applicable_discounts.append({
+                "id": d['discount_id'],
+                "name": d['name'],
+                "percent": float(d['percent'])/100.0
+                })
+        
+        return applicable_discounts
+    
+    except Exception as e:
+        print(f"Error fetching applicable discounts: {str(e)}")
+        return []
+    
+    finally:
+        cursor.close()
+
+
+def create_event(location_id, category_id, organiser_id, event_name, start_date, end_date, conditions, booking_deadline, description, original_price):
     conn = db_connector.get_connection()
     cursor = conn.cursor()
 
+    if organiser_id is None:
+        status = "published"
+    else:
+        status = "draft"
+
     try:
         query = """
-            INSERT INTO event
-            (location_id, event_name, start_date, end_date, conditions, booking_deadline, description, category_id, original_price, discount_rate)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, 0.00)
+            INSERT INTO event(
+                location_id, 
+                category_id,
+                organiser_id,
+                event_name,
+                start_date,
+                end_date,
+                conditions,
+                booking_deadline,
+                description,
+                original_price,
+                status)
+            VALUES (
+                %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """
-        cursor.execute(query, (location_id, event_name, start_date, end_date, conditions, booking_deadline, description, category_id, original_price))
+        cursor.execute(query, (location_id, category_id, organiser_id, event_name, start_date, end_date, conditions, booking_deadline, description, original_price, status))
         conn.commit()
         
         return True
@@ -142,7 +211,7 @@ def get_event_by_id(event_id):
     try:
         query = """
             SELECT e.*, c.category_name, l.name AS location_name, l.capacity,
-            (SELECT COUNT(*) FROM booking b WHERE b.event_id = e.event_id AND b.status != 'cancelled') AS tickets_sold
+            (SELECT COUNT(*) FROM booking b WHERE b.event_id = e.event_id AND b.status = 'confirmed') AS tickets_sold
             FROM event e
             JOIN category c ON e.category_id = c.category_id
             JOIN location l ON e.location_id = l.location_id

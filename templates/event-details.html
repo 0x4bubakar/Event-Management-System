@@ -35,16 +35,18 @@
 
   {% if not deadline_passed %}
   {% if not session.get('role') == 'admin' %}
+  {% if not session.get('user_id') %}
+  <p style="margin-bottom: 15px; color: #666;">You must be logged in to book tickets.</p>
+  <a href="{{ url_for('auth.login') }}" class="blue-btn" style="text-decoration: none;">Log In to Book</a>
+  {% else %}
   <form method="POST" action="{{ url_for('booking.book_event', event_id=event.event_id) }}">
-    {% if not session.get('user_id') %}
-    <p style="margin-bottom: 15px; color: #666;">You must be logged in to book tickets.</p>
-    <a href="{{ url_for('auth.login') }}" class="blue-btn" style="text-decoration: none;">Log In to Book</a>
-    {% else %}
-
     <div style="margin-bottom: 15px;">
-      <label for="days_booked" style="font-weight: bold;">Number of Days:</label><br>
+      <label for="days_booked" style="font-weight: bold;">Number of Days:</label>
       <input type="number" name="days_booked" id="days_booked" min="1" max="{{total_event_days}}" value="1" required
         style="padding: 10px; width: 100px; margin-top: 5px; text-align: center;">
+      <label for="attendee_name" style="font-weight: bold;">Attendee Name:</label>
+      <input type="text" name="attendee_name" id="attendee_name" required
+        style="padding: 10px; width: 500px; margin-top: 5px; text-align: center;">
     </div>
 
     <div id="price-preview-box"
@@ -73,11 +75,12 @@
   document.addEventListener("DOMContentLoaded", function () {
     const daysInput = document.getElementById('days_booked');
     const previewBox = document.getElementById('price-preview-box');
+    const bookBtn = document.querySelector('.book-btn');
+
     const basePrice = parseFloat("{{event.original_price}}");
     const totalEventDays = parseInt("{{total_event_days}}", 10);
-    const discountMultiplier = parseFloat("{{discount_multiplier}}") || 1;
-    const isStudent = "{{'true' if is_student else 'false'}}" === "true";
-    const bookBtn = document.querySelector('.book-btn');
+
+    const applicableDiscounts = {{ applicable_discounts | tojson | safe }};
     const basePricePerDay = basePrice / totalEventDays;
     
     function updatePrice() {
@@ -92,25 +95,17 @@
 
       let subtotal = basePricePerDay * daysBooked;
       let finalPrice = subtotal;
-      let discountedPrice, displayPercent, saved;
 
       htmlContent += `<p class="discount">You are about to book ${daysBooked} out ${totalEventDays} days.</p>`;
       htmlContent += `<p class="discount">(${daysBooked} / ${totalEventDays}) * £${basePrice.toFixed(2)} = £${finalPrice}</p>`;
       
-      if (discountMultiplier < 1) {
-        discountedPrice = finalPrice * discountMultiplier;
-        saved = finalPrice - discountedPrice;
-        finalPrice = discountedPrice;
-        displayPercent = Math.round((1 - discountMultiplier) * 100);
-        htmlContent += `<p class="discount">"Discount: ${displayPercent}% off (-£${saved})"</p>`;
-      }
+      applicableDiscounts.array.forEach(discount => {
+        let decimal = discount.percent / 100.0;
+        let amountDeducted = subtotal * decimal;
+        finalPrice -= amountDeducted;
 
-      if (isStudent) {
-        discountedPrice = finalPrice * 0.9;
-        saved = finalPrice - discountedPrice;
-        finalPrice = discountedPrice;
-        htmlContent += `<p class="discount">Student Discount: 10% off (-£${saved})</p>`;
-      }
+        htmlContent += `<p class="discount">${discount.name}: ${discount.percent}% off (-£${amountDeducted.toFixed(2)})</p>`;
+      });
 
       htmlContent += `<p><b>Final price: £${finalPrice}</b></p>`
       previewBox.innerHTML = htmlContent;
