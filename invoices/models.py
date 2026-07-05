@@ -7,7 +7,7 @@ from reportlab.graphics.charts.barcharts import VerticalBarChart
 from io import BytesIO
 from datetime import datetime as dt
 
-def receipt(booked_on, booking_number, attendee_name, event_name, days_booked, discounts, original_price, final_price):
+def receipt(booked_on, booking_id, attendee_name, event_name, days_booked, discounts, original_price, final_price):
     filename = f"Your Bristol Community Events Receipt - {booked_on.strftime('%d %B %Y')}.pdf"
     
     doc = SimpleDocTemplate(filename, pagesize=A4, topMargin=20*mm, bottomMargin=20*mm, leftMargin=20*mm, rightMargin=20*mm)
@@ -22,7 +22,7 @@ def receipt(booked_on, booking_number, attendee_name, event_name, days_booked, d
 
     # letterhead
     logo = Paragraph('<b>Bristol Community Events</b>', title_style)
-    booking_num = Paragraph(f"Order #{booking_number}", right_align_normal)
+    booking_num = Paragraph(f"Order #{booking_id}", right_align_normal)
 
     header_table = Table([[logo, booking_num]], colWidths=[110*mm, 60*mm])
     header_table.setStyle(TableStyle([

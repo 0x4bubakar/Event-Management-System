@@ -3,6 +3,7 @@ from utils.decorators import is_logged_in, is_admin
 from events.models import get_current_event_statuses, get_all_locations, get_all_categories, get_all_suitabilities, create_category, create_event, delete_event, create_location
 from reports.models import get_revenue_reports
 from .models import *
+from users.models import delete_account as db_delete_account
 
 admin_bp = Blueprint('admin', __name__)
 
@@ -120,7 +121,7 @@ def admin_update_password_route():
 @is_admin
 def admin_delete_account_route():
     target_user_id = request.form.get('user_id')
-    if admin_delete_account(target_user_id):
+    if db_delete_account(target_user_id):
         flash("User successfully deleted.", "flash-success")
     else:
         flash("Failed to delete user.", "flash-error")

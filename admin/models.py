@@ -55,24 +55,6 @@ def get_all_users():
     cursor.close()
     return users
 
-def admin_update_password(target_user_id, new_password):
-    conn = db_connector.get_connection()
-    cursor = conn.cursor()
-
-    try:
-        hashed_pw = generate_password_hash(new_password)
-        query = "UPDATE user SET password_hash = %s WHERE user_id = %s"
-        cursor.execute(query, (hashed_pw, target_user_id))
-        conn.commit()
-        return True
-    
-    except Exception as e:
-        conn.rollback()
-        return False
-    
-    finally:
-        cursor.close()
-
 def admin_delete_account(target_user_id):
     conn = db_connector.get_connection()
     cursor = conn.cursor()

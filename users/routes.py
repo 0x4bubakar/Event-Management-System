@@ -1,5 +1,6 @@
 from flask import Blueprint, redirect, render_template, url_for, request, flash, session
-from .models import *
+from .models import get_user_by_id, update_user, get_bookings_by_id
+from .models import delete_account as db_delete_account
 from utils.decorators import is_logged_in
 
 users_bp = Blueprint('users', __name__)
@@ -50,7 +51,7 @@ def update_profile():
 def delete_account():
     target_user_id = session.get('user_id')
     if target_user_id:
-        if delete_account(target_user_id):
+        if db_delete_account(target_user_id):
             flash("Account successfully deleted.", "flash-success")
             session.clear()
         else:
