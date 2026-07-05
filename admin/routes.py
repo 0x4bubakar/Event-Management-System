@@ -1,6 +1,6 @@
 from flask import Blueprint, redirect, render_template, url_for, request, flash, session
 from utils.decorators import is_logged_in, is_admin
-from events.models import get_current_event_statuses, get_all_locations, get_all_categories, get_all_suitabilities, create_category, create_event, delete_event
+from events.models import get_current_event_statuses, get_all_locations, get_all_categories, get_all_suitabilities, create_category, create_event, delete_event, create_location
 from reports.models import get_revenue_reports
 from .models import *
 
@@ -49,7 +49,7 @@ def new_event():
 @admin_bp.route('/admin/create-location', methods=['POST'])
 @is_logged_in
 @is_admin
-def create_location():
+def create_location_route():
     name = request.form.get("venue_name")
     address = request.form.get("address")
     capacity = request.form.get("capacity")
@@ -65,7 +65,7 @@ def create_location():
 @admin_bp.route('/admin/create-category', methods=['POST'])
 @is_logged_in
 @is_admin
-def create_category():
+def create_category_route():
     name = request.form.get("category_name")
     if create_category(name):
         flash("Category successfully created.", "flash-success")
@@ -96,7 +96,7 @@ def admin_users():
 @admin_bp.route('/admin/update-password', methods=['POST'])
 @is_logged_in
 @is_admin
-def admin_update_password():
+def admin_update_password_route():
     target_user_id = request.form.get('user_id')
     new_password = request.form.get('new_password')
     if admin_update_password(target_user_id, new_password):
@@ -109,7 +109,7 @@ def admin_update_password():
 @admin_bp.route('/admin/delete_account', methods=['POST'])
 @is_logged_in
 @is_admin
-def admin_delete_account():
+def admin_delete_account_route():
     target_user_id = request.form.get('user_id')
     if admin_delete_account(target_user_id):
         flash("User successfully deleted.", "flash-success")
