@@ -168,3 +168,88 @@ def cancel_booking(booking_id, user_id):
 
     finally:
         cursor.close()
+
+# get: booked_on, booking_id, attendee_name, event_name, days_booked, discounts, original_price, final_price
+# first prove: is user id same as the booking?
+def get_booking_details(user_id, booking_id):
+    conn = db_connector.get_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    try:
+        booking_query = """
+            SELECT
+                b.booking_id, b.user_id, b.attendee_name, b.days_booked, b.booked_base_price, b.status, e.event_name, b.booked_on,
+                (b.booked_base_price - COALESCE(SUM(bd.amount_deducted), 0)) AS final_price
+            FROM
+                booking b
+            JOIN
+                event e ON b.event_id = e.event_id
+            LEFT JOIN
+                booking_discounts bd ON b.booking_id = bd.booking_id
+            WHERE
+                b.booking_id = %s AND b.user_id = %s
+            GROUP BY
+                b.booking_id, b.user_id, b.attendee_name, b.days_booked, b.booked_base_price, e.event_name, b.status, b.booked_on
+        """
+
+        cursor.execute(booking_query, (booking_id, user_id))
+
+        booking_data = cursor.fetchone()
+
+        if not booking_data:
+            return None
+        
+        discounts_query = """
+            SELECT 
+                d.name, d.percent, bd.amount_deducted
+            FROM
+                booking_discounts as bd
+            JOIN
+                discount d ON bd.discount_id = d.discount_id
+            WHERE
+                bd.booking_id = %s
+        """
+
+        cursor.execute(discounts_query, (booking_id,))
+        booking_data['discounts'] = cursor.fetchall()
+
+        return booking_data
+    
+    except Exception as e:
+        print(f"Error fetching receipt data: {str(e)}")
+        return None
+    
+    finally:
+        cursor.close()
+
+def get_cancellation_data(user_id, booking_id):
+    conn = db_connector.get_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    try:
+        cancel_query = """
+            SELECT 
+                c.cancellation_id, c.cancellation_fee, c.cancelled_on
+            FROM
+                cancel as c
+            JOIN
+                booking b ON b.booking_id = c.booking_id
+            WHERE
+                b.booking_id = %s and b.user_id = %s
+        """
+
+        cursor.execute(cancel_query, (booking_id, user_id))
+
+        cancel_data = cursor.fetchone()
+
+        if not cancel_data:
+            return None
+        
+        return cancel_data
+    
+    except Exception as e:
+        print(f"Error fetching cancellation data: {e}")
+        return None
+    
+    finally:
+        cursor.close()

@@ -16,6 +16,7 @@ from main.routes import main_bp
 from organisers.routes import organisers_bp
 from reports.routes import reports_bp
 from users.routes import users_bp
+from invoices.routes import invoices_bp
 
 app.register_blueprint(admin_bp)
 app.register_blueprint(auth_bp)
@@ -26,3 +27,4 @@ app.register_blueprint(main_bp)
 app.register_blueprint(organisers_bp)
 app.register_blueprint(reports_bp)
 app.register_blueprint(users_bp)
+app.register_blueprint(invoices_bp)
