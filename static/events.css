@@ -1,4 +1,3 @@
-/* --- NEW SEARCH FORM STYLES --- */
 .filters {
   margin-bottom: 2rem;
   background: #fff;
@@ -11,7 +10,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
-  align-items: flex-end; /* Aligns the bottoms of the inputs to fix the slant */
+  align-items: flex-end;
 }
 
 .filter-group {
@@ -28,15 +27,14 @@
   color: #333;
 }
 
-/* Inherits your original search-bar aesthetic + fixes the slant */
 .search-input {
   width: 100%;
   padding: 0 0.9rem;
   font-size: 1rem;
   border-radius: 6px;
   border: 1px solid #ccc;
-  height: 42px; /* Fixed height for alignment */
-  box-sizing: border-box; /* Crucial slant fix */
+  height: 42px; 
+  box-sizing: border-box;
   font-family: inherit;
   background: #fff;
 }
@@ -79,7 +77,6 @@ select.search-input {
   text-decoration: none;
 }
 
-/* --- YOUR ORIGINAL CSS --- */
 .categories {
   display: flex;
   gap: 0.7rem;
@@ -100,7 +97,6 @@ select.search-input {
   color: #fff;
 }
 
-/* Event Grid */
 .events-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -123,7 +119,6 @@ select.search-input {
   transform: translateY(-3px);
 }
 
-/* Replaces your img tag with a colored box since there are no images in the DB */
 .event-img-placeholder {
   width: 100%;
   height: 180px;
@@ -138,15 +133,20 @@ select.search-input {
   text-transform: uppercase;
 }
 
+.event-card h3 {
+  margin: 0 0 0.5rem 0;
+  color: #333;
+}
+
 .event-card .info {
   padding: 1rem;
 }
-
-.event-card h3 {
-  margin-bottom: 0.3rem;
+.event-card info p {
+  color: #666; 
+  font-size: 0.9rem; 
+  line-height: 1.4;
 }
 
-/* Desktop grid */
 @media (min-width: 700px) {
   .events-grid {
     grid-template-columns: repeat(2, 1fr);

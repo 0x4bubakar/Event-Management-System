@@ -34,12 +34,17 @@ def get_current_event_statuses():
 
     try:
         query = """
-            SELECT e.event_id, e.event_name, e.start_date, l.capacity,
-            (SELECT COUNT(*) FROM booking b WHERE b.event_id = e.event_id AND b.status = 'confirmed') AS tickets_sold
-            FROM event e
-            JOIN location l on e.location_id = l.location_id
-            WHERE e.start_date > NOW()
-            ORDER BY e.start_date ASC
+            SELECT 
+                e.event_id, e.event_name, e.start_date, l.capacity,
+                (SELECT COUNT(*) FROM booking b WHERE b.event_id = e.event_id AND b.status = 'confirmed') AS tickets_sold
+            FROM 
+                event e
+            JOIN 
+                location l on e.location_id = l.location_id
+            WHERE 
+                e.start_date > NOW()
+            ORDER BY 
+                e.start_date ASC
         """
         cursor.execute(query)
         return cursor.fetchall()
@@ -210,12 +215,17 @@ def get_event_by_id(event_id):
 
     try:
         query = """
-            SELECT e.*, c.category_name, l.name AS location_name, l.capacity,
-            (SELECT COUNT(*) FROM booking b WHERE b.event_id = e.event_id AND b.status = 'confirmed') AS tickets_sold
-            FROM event e
-            JOIN category c ON e.category_id = c.category_id
-            JOIN location l ON e.location_id = l.location_id
-            WHERE e.event_id = %s
+            SELECT
+                e.*, c.category_name, l.name AS location_name, l.capacity,
+                (SELECT COUNT(*) FROM booking b WHERE b.event_id = e.event_id AND b.status = 'confirmed') AS tickets_sold
+            FROM 
+                event e
+            JOIN 
+                category c ON e.category_id = c.category_id
+            JOIN 
+                location l ON e.location_id = l.location_id
+            WHERE
+                e.event_id = %s
         """
         cursor.execute(query, (event_id,))
         return cursor.fetchone()
@@ -227,25 +237,25 @@ def get_event_by_id(event_id):
     finally:
         cursor.close()
 
-def get_public_events(event_name, category_id, start_date, end_date, is_free):
+def get_public_events(category_id, start_date, end_date, is_free):
     conn = db_connector.get_connection()
     cursor = conn.cursor(dictionary=True)
     
     try:
         query = """
-            SELECT e.event_id, e.event_name, e.start_date, e.original_price, e.description,
-                   c.category_name, l.name as location_name
-            FROM event e
-            JOIN category c ON e.category_id = c.category_id
-            JOIN location l ON e.location_id = l.location_id
-            WHERE e.start_date > NOW()
+            SELECT
+                e.event_id, e.event_name, e.start_date, e.original_price, e.description, e.booking_deadline,
+                c.category_name, l.name as location_name
+            FROM 
+                event e
+            JOIN 
+                category c ON e.category_id = c.category_id
+            JOIN
+                location l ON e.location_id = l.location_id
+            WHERE 
+                1=1
         """
         params = []
-
-        if event_name:
-            query += " AND e.event_name LIKE %s"
-            event_name = f"%{event_name}%"
-            params.append(event_name)
 
         if category_id:
             query += " AND e.category_id = %s"
@@ -279,11 +289,16 @@ def fetch_recent_events():
 
      try:
         query = """
-            SELECT e.*, l.name AS location_name
-            FROM event e
-            JOIN location l ON e.location_id = l.location_id
-            WHERE e.start_date > NOW()
-            ORDER BY e.start_date ASC
+            SELECT 
+                e.*, l.name AS location_name
+            FROM
+                event e
+            JOIN
+                location l ON e.location_id = l.location_id
+            WHERE
+                e.start_date > NOW()
+            ORDER BY
+                e.start_date ASC
             LIMIT 4
         """    
         cursor.execute(query)

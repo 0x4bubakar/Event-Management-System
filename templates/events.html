@@ -65,10 +65,19 @@
 
             <div class="info">
                 <h3>{{ event.event_name }}</h3>
-                <p style="color: #666; font-size: 0.9rem; line-height: 1.4;">
+                <p >
+                    {% if event.booking_deadline < now %}
+                    <span style="color: red; padding-bottom: 0.5rem;"><b>Booking deadline passed</b></span>
+                    <br>
+                    {% endif %}
                     <strong>📅</strong> {{ event.start_date.strftime('%d/%m/%Y') }}<br>
-                    <strong>🎟️</strong> {% if event.original_price == 0 %}Free{% else %}£{{
-                    "%.2f"|format(event.original_price) }}{% endif %}<br>
+                    <strong>🎟️</strong> 
+                    {% if event.original_price == 0 %}
+                        Free
+                    {% else %}
+                        £{{"%.2f"|format(event.original_price) }}
+                    {% endif %}
+                    <br>
                     <strong>📍</strong> {{ event.location_name }}
                 </p>
             </div>

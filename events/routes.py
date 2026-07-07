@@ -6,16 +6,16 @@ events_bp = Blueprint('events', __name__)
 
 @events_bp.route('/events')
 def events():
-    event_name = request.args.get('event_name')
     category_id = request.args.get('category_id')
     start_date = request.args.get('start_date')
     end_date = request.args.get('end_date')
     is_free = request.args.get('is_free')
 
-    public_events = get_public_events(event_name, category_id, start_date, end_date, is_free)
+    public_events = get_public_events(category_id, start_date, end_date, is_free)
     categories = get_all_categories()
+    now = datetime.now()
 
-    return render_template('events.html', events=public_events, categories=categories)
+    return render_template('events.html', events=public_events, categories=categories, now=now)
 
 @events_bp.route("/events/<int:event_id>")
 def event_details(event_id):
