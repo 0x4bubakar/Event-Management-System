@@ -1,0 +1,117 @@
+{% extends "layout-admin.html" %}
+{% block pageheader %}Create Event{% endblock %}
+
+{% block admin_content %}
+    <section class="dash-section">
+        <div class="create-container">
+            <form method="POST" action="{{url_for('admin.new_event')}}">
+                <div class="create-group">
+                    <label for="event_name">Event Name</label>
+                    <input type="text" id="event_name" name="event_name" class="admin-input">
+                </div>
+
+                <div class="create-group" style="flex: 1;">
+                    <label for="category_id">Category</label>
+                    <select id="category_id" name="category_id" class="admin-input">
+                        <option value="" disabled>Select a Category</option>
+                        {% for cat in cats %}
+                            <option value="{{ cat.category_id }}">{{ cat.category_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="create-group" style="flex: 1;">
+                    <label for="location_id">Venue</label>
+                    <select id="location_id" name="location_id" class="admin-input">
+                        <option value="" disabled>Select a Venue</option>
+                        {% for loc in locs %}
+                            <option value="{{ loc.location_id }}">{{ loc.name }} (Cap: {{ loc.capacity }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="create-group" style="flex: 1;">
+                    <label for="start_date">Start Date & Time</label>
+                    <input type="datetime-local" id="start_date" name="start_date" class="admin-input">
+                </div>
+                <div class="create-group" style="flex: 1;">
+                    <label for="end_date">End Date & Time</label>
+                    <input type="datetime-local" id="end_date" name="end_date" class="admin-input">
+                </div>
+
+                <div class="create-group" style="flex: 1;">
+                    <label for="booking_deadline">Booking Deadline</label>
+                    <input type="datetime-local" id="booking_deadline" name="booking_deadline" class="admin-input">
+                </div>
+                <div class="create-group" style="flex: 1;">
+                    <label for="original_price">Base Price (£)</label>
+                    <input type="number" id="original_price" step="0.01" name="original_price" min="0" class="admin-input">
+                </div>
+
+                <div class="create-group">
+                    <label for="conditions">Conditions (Optional)</label>
+                    <input type="text" id="conditions" name="conditions" class="admin-input">
+                </div>
+
+                <div class="create-group">
+                    <label for="description">Description</label>
+                    <!-- Overriding the 40px fixed height from .admin-input specifically for this textarea -->
+                    <textarea id="description" name="description" rows="4" class="admin-input" style="height: auto; padding: 0.8rem;"></textarea>
+                </div>
+
+                <div class="create-actions">
+                    <button type="submit" class="blue-btn">Save Changes</button>
+                    <a href="{{ url_for('admin.admin_events') }}" class="red-btn">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const categorySelect = document.getElementById('category_id');
+        const locationSelect = document.getElementById('location_id');
+        const suitabilityMap = {{ suits | tojson | safe }};
+        
+        function updateLocations() {
+            // grab value of selected category - i.e. the category id
+            const selectedCategoryId = parseInt(categorySelect.value);
+            // make list of allowed venues
+            // .filter() sifts through the entire suitability map and discards anything not matching the selected category
+            // .map() takes the filtered list and extracts only the venue ids and converts them to text strings
+            // we are then returned with an array of allowed venue ids like ["1", "2", "3", ...]
+            const validLocationIds = suitabilityMap.filter(function(item) {
+                    return item.category_id === selectedCategoryId
+                })
+                .map(function(item) {
+                    return item.location_id.toString();
+                });
+
+                for (let i = 0; i < locationSelect.options.length; i++) {
+                    let locOption = locationSelect.options[i]
+                    if (locOption.value === "") continue; // ignore "select a venue"
+                    if (validLocationIds.includes(locOption.value)) {
+                        locOption.disabled = false;
+                        locOption.style.color = "inherit";
+                    } else {
+                        locOption.disabled = true;
+                        locOption.style.color = "#ccc"
+                    }
+                }
+        }
+
+        // run immediately on load to set up initial state correctly
+        if (categorySelect.value) {
+            updateLocations();
+        }
+
+        // run whenever category is changed
+        categorySelect.addEventListener('change', function() {
+            locationSelect.selectedIndex = 0;
+            updateLocations();
+        })
+        });
+</script>
+{% endblock %}

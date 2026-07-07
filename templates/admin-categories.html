@@ -1,0 +1,25 @@
+{% extends "layout-admin.html" %}
+{% block page_header %}Manage categories{% endblock %}
+{% block admin_content %}
+<section class="dash-section">
+    <div class="header-2">
+        <h2>All categories</h2>
+        <a href="{{ url_for('admin.create_category_route') }}" class="blue-btn">Create a category</a>
+    </div>
+    <div class="list">
+        {% for cat in cats %}
+            <div class="list-row">
+                <span class="list-item-name">{{ cat.category_name }}</span>
+                <form method="POST" action="{{ url_for('admin.admin_delete_category_route') }}" style="display: flex; gap: 10px;">
+                    <input type="hidden" name="cat_id" value="{{ cat.category_id }}">
+                    <button class="red-btn" type="submit">Delete category</button>
+                </form>
+            </div>
+        {% else %}
+            <div class="empty-state">
+                No categories found. Why don't you <a href="{{ url_for('admin.create_category_route') }}">create</a> some?
+            </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

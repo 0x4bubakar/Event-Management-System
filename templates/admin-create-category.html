@@ -1,0 +1,20 @@
+{% extends "layout-admin.html" %}
+{% block page_header %}Create Category{% endblock %}
+{% block admin_content %}
+<section class="dash-section">    
+    <div class="create-container">
+        <form method="POST" action="{{ url_for('admin.create_category_route') }}">
+            <div class="create-group">
+                <label for="category_name">Category Name</label>
+                <input type="text" id="category_name" name="category_name" class="admin-input" required>
+            </div>
+
+            <div class="create-actions">
+                <button type="submit" class="blue-btn">Save Category</button>
+                <a href="{{ url_for('admin.categories_route') }}" class="red-btn">Cancel</a>
+            </div>
+            
+        </form>
+    </div>
+</section>
+{% endblock %}

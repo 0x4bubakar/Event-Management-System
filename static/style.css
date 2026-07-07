@@ -81,22 +81,6 @@ header {
   display: flex;
 }
 
-.search {
-  width: 100%;
-  border-radius: 10px;
-  border-width: 1px;
-}
-
-.search form input {
-  padding: 0.75rem 1rem;
-  width: 100%;
-  font-size: 1rem;
-}
-
-.search form input:focus {
-  outline: 2px solid #fff;
-}
-
 table {
   display: block;
   overflow-x: auto;

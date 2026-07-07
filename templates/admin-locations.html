@@ -1,0 +1,38 @@
+{% extends "layout-admin.html" %}
+{% block page_header %}Venue Management{% endblock %}
+
+{% block admin_content %}
+
+<section class="dash-section" style="margin-top: 3rem;">
+    <div class="header-2">
+        <h2>Manage Existing Venues</h2>
+        <a href="{{ url_for('admin.create_location_route') }}" class="blue-btn" style="text-decoration: none;">Create New Venue</a>
+    </div>
+
+    {% if locs %}
+    <table style="width: 100%; text-align: left; border-collapse: collapse; margin-top: 1rem; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+        <tr style="background: #f4f4f4; border-bottom: 2px solid #ddd;">
+            <th style="padding: 12px;">ID</th>
+            <th style="padding: 12px;">Venue Name</th>
+            <th style="padding: 12px;">Capacity</th>
+            <th style="padding: 12px;">Actions</th>
+        </tr>
+        {% for loc in locs %}
+        <tr style="border-bottom: 1px solid #eee;">
+            <td style="padding: 12px;">{{ loc.location_id }}</td>
+            <td style="padding: 12px;"><strong>{{ loc.name }}</strong></td>
+            <td style="padding: 12px;">{{ loc.capacity }} people</td>
+            <td style="padding: 12px;">
+                <a class="blue-btn" href="{{url_for('admin.edit_location_route', location_id=loc.location_id)}}">Edit Details</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <div class="empty-state">
+        <p>No venues exist yet. Use the form above to add your first one!</p>
+    </div>
+    {% endif %}
+</section>
+
+{% endblock %}

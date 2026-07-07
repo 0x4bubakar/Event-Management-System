@@ -10,8 +10,8 @@ Note: the following requirements have been taken from the assessment briefs offe
 - [x] Users should be able to filter events based on specific categories e.g., exhibitions, workshops, sports events, etc. 
 - [x] The search criteria could be single date, dates range/months, event category, free events, etc.
 - [x] Users should be able to view the details of the selected event(s). These details will include event name, date(s), ticket price (which can be zero for some events), event venue, any conditions (e.g., formal dress), remaining tickets left, deadline to book tickets by.
-- [ ] Continue with booking by singing up/login and generating and downloading booking receipt OR repeat the first step.
-- [] Bookings can be made up to 2 months before the deadline. Advance booking discounts are allocated as follows:
+- [x] Continue with booking by singing up/login and generating and downloading booking receipt OR repeat the first step.
+- [x] Bookings can be made up to 2 months before the deadline. Advance booking discounts are allocated as follows:
 
 |Number of days booked before the deadline|Discount|
 |---|---|
@@ -26,7 +26,7 @@ Note: the following requirements have been taken from the assessment briefs offe
 
 - [x] If all tickets have been booked for an event, then the user is automatically placed on a waiting list alongside a timestamp. If x more spaces become available (i.e. someone cancels their booking or if more spaces are added) - then the first x people who are on the waiting list are booked.
 
-- [ ] A user can choose to cancel a booking prior to the deadline - but note that they may be subjected to the following charges:
+- [x] A user can choose to cancel a booking prior to the deadline - but note that they may be subjected to the following charges:
 
 |Days before deadline|Cancellation charge|
 |---|---|
@@ -38,11 +38,11 @@ Note: the following requirements have been taken from the assessment briefs offe
 
 ### Administrator perspective
 - [x] Admins should be able to login/logout and update password for admin as well as other users on the system
-- [] Admins should be able to to add/update/remove/edit details of events, price constraints, number of available tickets, venues, as well as end user details
-- [ ] Admins should be able to check the status of specific bookings and specific events (such as whether the event is fully booked or not, amount of people currently waitlisted).
-- [ ] Admins should be able to generate admin reports - e.g. profit earned in an event, number of bookings for a specific event, number of successful events in a specific year, number of tickets available for a specific event, upcoming events on a specific venue, etc.
-- [ ] The number of tickets per event is contingent on the capacity of the venue. For instance, if venue A has a maximum capacity of x, an event can have y tickets - where y <= x.
-- [ ] If less than 50% of bookings are made within 10 days of an event, admin should be able to lower the ticket price by at least 25%.
+- [x] Admins should be able to to add/update/remove/edit details of events, price constraints, number of available tickets, venues, as well as end user details
+- [x] Admins should be able to check the status of specific bookings and specific events (such as whether the event is fully booked or not, amount of people currently waitlisted).
+- [x] Admins should be able to generate admin reports - e.g. profit earned in an event, number of bookings for a specific event, number of successful events in a specific year, number of tickets available for a specific event, upcoming events on a specific venue, etc.
+- [x] The number of tickets per event is contingent on the capacity of the venue. For instance, if venue A has a maximum capacity of x, an event can have y tickets - where y <= x.
+- [x] If less than 50% of bookings are made within 10 days of an event, admin should be able to lower the ticket price by at least 25%.
 
 ### Event Organiser perspective
 - [ ] An event organiser should be able to register/Login/Logout/password update.
@@ -88,22 +88,21 @@ source venv/bin/activate
 pip install -r requirements.txt
 ~~~
 
-4. Create the database
-This can be done several ways. MySQL Workbench is one, but I have had issues running it on Ubuntu. Thus I would recommend using the following command on Linux or Unix-like systems:
+4. Create the database and populate it with sample data.
 ~~~sh
-mysql -u {name of user} -p < init_db.sql
+mysql -u {name of user} -p < init_db.sql && mysql -u {name of user} -p < insert_sample_data.sql
 ~~~
 
 5. Create a .env file with values for the following environment variables:
 - DB_HOST (the IP address of your database, usually 127.0.0.1 if localhost)
 - DB_USERNAME
 - DB_PASSWORD
-- DB_NAME (in the case of init_db.sql, it is mydb)
+- DB_NAME (in the case of init_db.sql, it is wdadb)
 - SECRET_KEY
 
 6. Start the Flask server with `flask run`.
 
-7. In order to create an admin user, first create a user account at `/login`, and then update the user's role to `admin` with the MySQL CLI or Workbench using the following command:
+7. In order to create an admin user, first create a user account at `/login`, and then update the user's role to `admin` with the MySQL command-line interface or Workbench using the following command:
 ~~~sql
 UPDATE user
 SET role = 'admin'

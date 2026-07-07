@@ -1,6 +1,24 @@
 import db_connector
 from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import datetime
 
+def validate_event_dates(start_date, end_date, booking_deadline):
+    try:
+        start_dt = datetime.fromisoformat(start_date)
+        end_dt = datetime.fromisoformat(end_date)
+        deadline_dt = datetime.fromisoformat(booking_deadline)
+
+        if end_dt <= start_dt:
+            return False, "The event's end date must be after its start date."
+        
+        if deadline_dt > start_dt:
+            return False, "The booking deadline cannot be after the event has started."
+
+        return True, ""
+        
+    except ValueError:
+        return False, "Invalid date format submitted."
+    
 def get_all_locations():
     conn = db_connector.get_connection()
     cursor = conn.cursor(dictionary=True)
@@ -28,7 +46,7 @@ def get_all_suitabilities():
     conn.close()
     return mapping
 
-def get_current_event_statuses():
+def get_event_status():
     conn = db_connector.get_connection()
     cursor = conn.cursor(dictionary=True)
 
@@ -36,7 +54,8 @@ def get_current_event_statuses():
         query = """
             SELECT 
                 e.event_id, e.event_name, e.start_date, l.capacity,
-                (SELECT COUNT(*) FROM booking b WHERE b.event_id = e.event_id AND b.status = 'confirmed') AS tickets_sold
+                (SELECT COUNT(*) FROM booking b WHERE b.event_id = e.event_id AND b.status = 'confirmed') AS tickets_sold,
+                (SELECT COUNT(*) FROM booking b WHERE b.event_id = e.event_id AND b.status = 'waitlisted') AS waitlisted
             FROM 
                 event e
             JOIN 
@@ -177,7 +196,7 @@ def create_category(category_name):
     
     except Exception as e:
         conn.rollback()
-        print(f"Error creating event: {str(e)}")
+        print(f"Error creating category: {str(e)}")
         return False
     
     finally:
@@ -310,3 +329,144 @@ def fetch_recent_events():
      
      finally:
          cursor.close()
+
+def edit_events(location_id, category_id, organiser_id, event_name, start_date, end_date, conditions, booking_deadline, description, original_price, event_id):
+    conn = db_connector.get_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    try:
+        set_clauses = [] # sql fragments
+        params = [] # actual data values
+
+        if location_id:
+            set_clauses.append("location_id = %s")
+            params.append(location_id)
+        
+        if category_id:
+            set_clauses.append("category_id = %s")
+            params.append(category_id)
+        
+        if organiser_id:
+            set_clauses.append("organiser_id = %s")
+            params.append(organiser_id)
+        
+        if event_name:
+            set_clauses.append("event_name = %s")
+            params.append(event_name)
+
+        if start_date:
+            set_clauses.append("start_date = %s")
+            params.append(start_date)
+
+        if end_date:
+            set_clauses.append("end_date = %s")
+            params.append(end_date)
+        
+        if conditions:
+            set_clauses.append("conditions = %s")
+            params.append(conditions)
+        
+        if booking_deadline:
+            set_clauses.append("booking_deadline = %s")
+            params.append(booking_deadline)
+
+        if description:
+            set_clauses.append("description = %s")
+            params.append(description)
+        
+        if original_price:
+            set_clauses.append("original_price = %s")
+            params.append(original_price)
+        
+        if not set_clauses: # if nothing was actually edited, return false
+            return False
+        
+        params.append(event_id)
+
+        edit_query = "UPDATE event SET " + ", ".join(set_clauses) + " WHERE event_id = %s"
+        
+        cursor.execute(edit_query, tuple(params))
+        conn.commit()
+        return True
+    
+    except Exception as e:
+        print(f"Error editing event: {e}")
+        return False
+    
+    finally:
+        cursor.close()
+
+def is_location_suitable(location_id, category_id):
+    conn = db_connector.get_connection()
+    cursor = conn.cursor()
+
+    try:
+        query = "SELECT 1 FROM suitability WHERE location_id = %s and category_id = %s LIMIT 1"
+        cursor.execute(query, (location_id, category_id))
+        result = cursor.fetchall()
+        return len(result) > 0
+    
+    except Exception as e:
+        print(f"Suitability check error: {e}")
+        return False
+    
+    finally:
+        cursor.close()
+
+def edit_location(name, capacity, address, suitabilities, location_id):
+    conn = db_connector.get_connection()
+    cursor = conn.cursor()
+
+    try:
+        set_clauses = [] # sql fragments
+        params = [] # actual data values
+
+        if name:
+            set_clauses.append("name = %s")
+            params.append(name)
+        
+        if capacity:
+            set_clauses.append("capacity = %s")
+            params.append(capacity)
+        
+        if address:
+            set_clauses.append("address = %s")
+            params.append(address)
+        
+        if not set_clauses: # if nothing was actually edited, return false
+            return False
+        
+        params.append(location_id)
+
+        edit_query = "UPDATE location SET " + ", ".join(set_clauses) + " WHERE location_id = %s"
+        cursor.execute(edit_query, (tuple(params)))
+
+        new_location_id = cursor.lastrowid
+        
+        if suitabilities:
+            suit_query = "INSERT INTO suitability (location_id, category_id) VALUES (%s, %s)"
+            for category_id in suitabilities:
+                cursor.execute(suit_query, (new_location_id, category_id))
+
+        conn.commit()
+        return True
+    
+    except Exception as e:
+        conn.rollback()
+        print(f"Error creating location: {str(e)}")
+        return False
+    
+    finally:
+        cursor.close()
+
+def get_location_by_id(location_id):
+    conn = db_connector.get_connection()
+    cursor = conn.cursor(dictionary=True)
+    try:
+        cursor.execute("SELECT * FROM location WHERE location_id = %s", (location_id,))
+        return cursor.fetchone()
+    except Exception as e:
+        print(f"Error fetching location: {e}")
+        return None
+    finally:
+        cursor.close()

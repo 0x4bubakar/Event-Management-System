@@ -9,3 +9,34 @@
     margin-right: 15px; 
     text-decoration: none;
 }
+
+.admin-input {
+    width: 100%;
+    padding: 0 rem;
+    font-size: 1rem;
+    border-radius: 6px;
+    border-radius: 6px;
+    border: 1px solid black;
+    height: 40px;
+    box-sizing: border-box;
+}
+
+.admin-input focus {
+    outline: none;
+    border-color: #0074ff;
+}
+
+.stats-grid {
+    display: flex; 
+    gap: 1rem; 
+    margin-bottom: 2rem;
+}
+
+.stats-card {
+    flex: 1; 
+    background: #fff; 
+    padding: 1.5rem; 
+    border-radius: 8px; 
+    border: 1px solid #ddd; 
+    text-align: center;
+}

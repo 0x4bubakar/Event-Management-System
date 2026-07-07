@@ -1,39 +1,30 @@
 {% extends "layout-admin.html" %}
 {% block page_header %}Home{% endblock %}
 {% block admin_content %}
-
-<section class="dash-section">
-    <h2 class="header-2">Live Event Status</h2>
-    {% if not eventstat %}
-    <p>It appears that there are no upcoming events! Why not create some <a href="{{url_for('admin.admin_events')}}">here</a>?</p>
-    {% else %}
-    <table>
-        <tr>
-            <th>Event Name</th>
-            <th>Date</th>
-            <th>Tickets Sold</th>
-            <th>Capacity</th>
-            <th>Status</th>
-        </tr>
-
-        {% for event in eventstat %}
-        <tr>
-            <td>{{ event.event_name }}</td>
-            <td>{{ event.start_date.strftime('%d %B %Y, %H:%M') }}</td>
-            <td>{{ event.tickets_sold }}</td>
-            <td>{{ event.capacity }}</td>
-            <td>
-                {% if event.tickets_sold >= event.capacity %}
-                    <span style="color: red; font-weight: bold;">FULLY BOOKED</span>
-                {% else %}
-                    <span style="color: green; font-weight: bold;">AVAILABLE</span>
-                {% endif %}
-            </td>
-        </tr>
-        {% endfor %}
-    </table>
-    {% endif %}
-
+<section class="stats-grid">
+    <section class="stats-card">
+        <h3>Total Events:</h3>
+        <p>{{ quickstats.total_events }}</p>
+    </section>
+    <section class="stats-card">
+        <h3>Total Bookings:</h3>
+        <p>{{ quickstats.total_bookings }}</p>
+    </section>
+    <section class="stats-card">
+        <h3>Total Users:</h3>
+        <p>{{ quickstats.total_users }}</p>
+    </section>
+    <section class="stats-card">
+        <h3>Total Revenue:</h3>
+        <p>£{{ quickstats.total_revenue }}</p>
+    </section>
 </section>
 
+<section class="dash-section">
+    <a href="{{ url_for('admin.admin_events') }}" class="blue-btn">Manage Events</a>
+    <a href="{{ url_for('admin.admin_events') }}" class="blue-btn">Manage Venues</a>
+    <a href="{{ url_for('admin.admin_events') }}" class="blue-btn">Manage Categories</a>
+    <a href="{{ url_for('admin.admin_events') }}" class="blue-btn">Manage Users</a>
+    <a href="{{ url_for('admin.admin_events') }}" class="blue-btn">View Reports</a>
+</section>
 {% endblock %}
