@@ -1,0 +1,29 @@
+{% extends "layout.html" %} 
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}"/>
+{% endblock %} 
+{% block title %} Organiser Sign Up | Bristol Community Events {% endblock %} 
+
+{% block body %}
+<section class="auth-container">
+  <div class="auth-card">
+    <form method="POST" action="{{ url_for('org.org_register') }}" id="signupForm">
+      <div class="input-group">
+        <label>Company name</label>
+        <input type="text" name="name" required />
+      </div>
+
+      <div class="input-group">
+        <label>Email</label>
+        <input type="email" name="email" required />
+      </div>
+
+      <div class="input-group">
+        <label>Password</label>
+        <input type="password" name="password" required />
+      </div>
+      <button class="auth-btn" type="submit">Create Account</button>
+    </form>
+  </div>
+</section>
+{% endblock %}

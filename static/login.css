@@ -2,10 +2,12 @@
   background: url("https://upload.wikimedia.org/wikipedia/commons/5/50/Bristol_Marina.jpg")
     center/cover no-repeat;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   padding: 2rem 1rem;
   min-height: calc(100vh - 80px);
+  gap: 1rem;
 }
 
 .auth-card {

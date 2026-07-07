@@ -45,6 +45,9 @@ endblock %} {% block body %}
       <button class="auth-btn" type="submit">Create Account</button>
     </form>
   </div>
+  <div class="auth-card">
+    <span>Want to host your own events? Become an organiser <a href="{{ url_for('org.org_register') }}">here</a>!</span>
+  </div>
 </section>
 
 {% endblock %} {% block scripts %}
