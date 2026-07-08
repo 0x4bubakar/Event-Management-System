@@ -35,18 +35,32 @@ def create_organiser(name, email, password):
 
 def get_org_by_user_id(user_id):
     conn = db_connector.get_connection()
-    cursor = conn.cursor()
+    cursor = conn.cursor(dictionary=True)
 
-    query = "SELECT organiser_id FROM organiser WHERE user_id=%s"
+    query = "SELECT organiser_id, description FROM organiser WHERE user_id=%s"
     
     try:
-        org_id = cursor.execute(query, (user_id,))
-        if org_id:
-            return org_id
-        else:
-            return None
+        cursor.execute(query, (user_id,))
+        org_data = cursor.fetchone()
+        return org_data
     except Exception as e:
         print(f"Error fetching organiser_id from user_id: {str(e)}")
         return None
+    finally:
+        cursor.close()
+
+def edit_org_profile(org_id,  description):
+    conn = db_connector()
+    cursor = conn.cursor()
+    try:
+        edit_query = "UPDATE organiser SET description = %s WHERE organiser_id = %s"
+        cursor.execute(edit_query, (description, org_id))
+        conn.commit()
+        return True
+    
+    except Exception as e:
+        print(f"Error editing organiser profile: {e}")
+        return False
+    
     finally:
         cursor.close()

@@ -18,6 +18,9 @@ def dashboard():
     if user_data['role'] == 'admin':
         return redirect(url_for('admin.admin_dashboard'))
     
+    if user_data['role'] == 'organiser':
+        return redirect(url_for('org.org_dashboard'))
+    
     bookings = get_bookings_by_id(user_id)
         
     return render_template('user-dashboard.html', email=user_data['email'], name=user_data['name'], bookings=bookings)

@@ -1,0 +1,81 @@
+{% extends "layout-org.html" %}
+{% block page_header %}Edit profile{% endblock %}
+
+{% block admin_content %}
+<div class="create-container">
+    <section class="dash-section">
+    <h2 class="header-2">Account</h2>
+    <form method="POST" action="{{ url_for('users.update_profile') }}">
+        <div class="list">
+            <div class="list-row">
+                <span class="list-item-name">Email</span>
+                <span class="view-mode">{{email}}</span>
+                <span class="edit-mode"><input name="email" type="email" value="{{email}}"></span>
+            </div>
+            <div class="list-row">
+                <span class="list-item-name">Organisation name</span>
+                <span class="view-mode">{{name}}</span>
+                <span class="edit-mode"><input name="name" type="text" value="{{name}}"></span>
+            </div>
+            <div class="list-row">
+                <span class="list-item-name">Password</span>
+                <span class="view-mode">●●●●●●●●</span>
+                <span class="edit-mode"><input name="password" type="password" placeholder="New Password"></span>
+            </div>    
+            <div class="list-row">
+                <span class="list-item-name">Description</span>
+                <span class="view-mode">{{description}}</span>
+                <span class="edit-mode"><input name="description" type="text" value="{{description}}"></span>
+            </div>
+        </div> 
+
+        <div class="edit-mode" style="display: none;">
+            <div class="btn-selector" style="margin-top: 15px;">
+                <input type="submit" class="blue-btn" value="Save changes">
+                <button class="red-btn" id="cancelBtn" type="button">Cancel</button>
+            </div>
+        </div>
+    </form> 
+    
+    <div class="view-mode" style="margin-top: 15px;">
+        <div class="btn-selector" style="display: flex; gap: 10px;">
+            <button class="blue-btn" id="editBtn" type="button">Edit details</button>
+            
+            <form method="POST" action="{{ url_for('users.delete_account') }}">
+                <button class="red-btn" type="submit" onclick="return confirm('Are you sure you want to permanently delete your account? This cannot be undone.');">Delete account</button>
+            </form>
+        </div>
+    </div>
+</section>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const editBtn = document.getElementById('editBtn');
+const cancelBtn = document.getElementById('cancelBtn');
+const viewMode = document.querySelectorAll('.view-mode');
+const editMode = document.querySelectorAll('.edit-mode');
+
+function toggleEditMode() {
+    viewMode.forEach(function(element) {
+        if (element.style.display === 'none') {
+            element.style.display = ''; 
+        } else {
+            element.style.display = 'none';
+        }
+    });
+
+    editMode.forEach(function(element) {
+        if (element.style.display === 'block' || element.style.display === 'inline-block') {
+            element.style.display = 'none';
+        } else {
+            element.style.display = element.tagName === 'SPAN' ? 'inline-block' : 'block';
+        }
+    });
+}
+
+editBtn.addEventListener('click', toggleEditMode);
+cancelBtn.addEventListener('click', toggleEditMode);
+</script>
+{% endblock %}

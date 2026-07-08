@@ -1,27 +1,32 @@
-{% extends "layout-admin.html" %}
+{% extends "layout-org.html" %}
 {% block page_header %}Home{% endblock %}
 {% block admin_content %}
-<section class="stats-grid">
+<h2>Organiser Dashboard</h2>     
+
+<section class="dash-section stats-grid">
     <section class="stats-card">
         <h3>Total Events:</h3>
-        <p>{{ quickstats.total_events }}</p>
+        <p></p>
     </section>
     <section class="stats-card">
         <h3>Total Bookings:</h3>
-        <p>{{ quickstats.total_bookings }}</p>
+        <p></p>
     </section>
     <section class="stats-card">
         <h3>Total Users:</h3>
-        <p>{{ quickstats.total_users }}</p>
+        <p></p>
     </section>
     <section class="stats-card">
         <h3>Total Revenue:</h3>
-        <p>£{{ quickstats.total_revenue }}</p>
+        <p>£</p>
     </section>
 </section>
 
+<h3>What would you like to do today?</h3>
 <section class="dash-section">
-    <a href="{{ url_for('org.events') }}" class="blue-btn">Manage Events</a>
-    <a href="{{ url_for('org.reports') }}" class="blue-btn">View Reports</a>
+    <a href="{{ url_for('org.org_profile') }}" class="blue-btn">Edit Organiser Profile</a>
+    <a href="{{ url_for('org.org_events') }}" class="blue-btn">Manage Events</a>
+    <a href="{{ url_for('org.org_reports') }}" class="blue-btn">View Reports</a>
 </section>
+
 {% endblock %}

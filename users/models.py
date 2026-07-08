@@ -58,18 +58,27 @@ def create_user(name, email, plain_text_password):
 
 def update_user(user_id, name, email, password):
     conn = db_connector.get_connection()
-    cursor = conn.cursor()
-    default_role = "student" if email.lower().endswith(".ac.uk") else "member"
+    cursor = conn.cursor(dictionary=True)
 
     try:
+        cursor.execute("SELECT role FROM user WHERE user_id = %s", (user_id,))
+        current_user = cursor.fetchone()
+        
+        current_role = current_user['role'] if current_user else "member"
+
+        if current_role in ['student', 'member']:
+            new_role = "student" if email.lower().endswith(".ac.uk") else "member"
+        else:
+            new_role = current_role 
+
         if password:
             hashed_password = generate_password_hash(password)
             query = "UPDATE user SET name = %s, email = %s, password_hash = %s, role = %s WHERE user_id = %s"
-            cursor.execute(query, (name, email, hashed_password, default_role, user_id, ))
+            cursor.execute(query, (name, email, hashed_password, new_role, user_id))
         
         else:
-            query = "UPDATE user SET name = %s, email = %s, role=%s WHERE user_id = %s"
-            cursor.execute(query, (name, email, default_role, user_id ))
+            query = "UPDATE user SET name = %s, email = %s, role = %s WHERE user_id = %s"
+            cursor.execute(query, (name, email, new_role, user_id))
 
         conn.commit()
         return True
