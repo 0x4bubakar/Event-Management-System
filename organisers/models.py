@@ -32,3 +32,21 @@ def create_organiser(name, email, password):
         
         finally:
             cursor.close()
+
+def get_org_by_user_id(user_id):
+    conn = db_connector.get_connection()
+    cursor = conn.cursor()
+
+    query = "SELECT organiser_id FROM organiser WHERE user_id=%s"
+    
+    try:
+        org_id = cursor.execute(query, (user_id,))
+        if org_id:
+            return org_id
+        else:
+            return None
+    except Exception as e:
+        print(f"Error fetching organiser_id from user_id: {str(e)}")
+        return None
+    finally:
+        cursor.close()

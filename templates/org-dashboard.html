@@ -1,0 +1,27 @@
+{% extends "layout-admin.html" %}
+{% block page_header %}Home{% endblock %}
+{% block admin_content %}
+<section class="stats-grid">
+    <section class="stats-card">
+        <h3>Total Events:</h3>
+        <p>{{ quickstats.total_events }}</p>
+    </section>
+    <section class="stats-card">
+        <h3>Total Bookings:</h3>
+        <p>{{ quickstats.total_bookings }}</p>
+    </section>
+    <section class="stats-card">
+        <h3>Total Users:</h3>
+        <p>{{ quickstats.total_users }}</p>
+    </section>
+    <section class="stats-card">
+        <h3>Total Revenue:</h3>
+        <p>£{{ quickstats.total_revenue }}</p>
+    </section>
+</section>
+
+<section class="dash-section">
+    <a href="{{ url_for('org.events') }}" class="blue-btn">Manage Events</a>
+    <a href="{{ url_for('org.reports') }}" class="blue-btn">View Reports</a>
+</section>
+{% endblock %}

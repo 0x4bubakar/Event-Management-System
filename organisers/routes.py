@@ -1,5 +1,6 @@
 from flask import Blueprint, redirect, render_template, url_for, request, flash, session
 from .models import *
+from utils.decorators import is_logged_in, is_org, is_orgs_event
 
 organisers_bp = Blueprint('org', __name__)
 
@@ -25,3 +26,28 @@ def org_register():
             flash("One of the fields are missing information. Please fill them in.", "flash-error")
         
     return render_template('org-register.html')
+
+@organisers_bp.route('/org', methods=['GET', 'POST'])
+@is_logged_in
+@is_org
+def org_dashboard():
+    return render_template('org_dashboard.html')
+
+@organisers_bp.route('/org/events', methods=['GET', 'POST'])
+@is_logged_in
+@is_org
+def org_events():
+    return render_template('org_dashboard.html')
+
+@organisers_bp.route('/org/events/create', methods=['GET', 'POST'])
+@is_logged_in
+@is_org
+def org_create_event():
+    return render_template('org_dashboard.html')
+
+@organisers_bp.route('/org/events/<int:event_id>', methods=['GET', 'POST'])
+@is_logged_in
+@is_org
+@is_orgs_event
+def org_edit_event():
+    return render_template('org_dashboard.html')
