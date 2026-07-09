@@ -10,14 +10,15 @@
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
-  align-items: flex-end;
+  align-items: flex-start;
 }
 
 .filter-group {
-  flex: 1;
-  min-width: 140px;
+  flex: 1 1 150px;
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
+  margin: 0;
 }
 
 .filter-group label {
@@ -37,36 +38,42 @@
   box-sizing: border-box;
   font-family: inherit;
   background: #fff;
+  margin: 0;
 }
 
 select.search-input {
-  -webkit-appearance: none;
-  appearance: none;
+  cursor: pointer;
 }
 
 .checkbox-group {
-  flex-direction: row;
-  align-items: center;
+  flex-direction: column;
+  align-items: center; 
   gap: 0.5rem;
   height: 42px;
-  min-width: 100px;
+  margin: 0;
 }
 
 .checkbox-group input {
   width: 18px;
   height: 18px;
   margin: 0;
+  cursor: pointer;
 }
 
 .checkbox-group label {
   margin: 0;
   cursor: pointer;
+  font-weight: normal; 
+  font-size: 0.95rem;
 }
 
 .filter-actions {
   display: flex;
-  gap: 0.5rem;
+  gap: 1rem;
   height: 42px;
+  flex: 0 0 auto;
+  margin: 0; 
+  align-items: flex-start;
 }
 
 .filter-actions button, .filter-actions a {
@@ -75,6 +82,7 @@ select.search-input {
   align-items: center;
   padding: 0 1.5rem;
   text-decoration: none;
+  box-sizing: border-box;
 }
 
 .categories {
@@ -141,7 +149,8 @@ select.search-input {
 .event-card .info {
   padding: 1rem;
 }
-.event-card info p {
+
+.event-card .info p {
   color: #666; 
   font-size: 0.9rem; 
   line-height: 1.4;

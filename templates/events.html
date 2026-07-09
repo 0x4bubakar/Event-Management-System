@@ -42,9 +42,9 @@
             </div>
 
             <div class="filter-group checkbox-group">
+                <label for="is_free">Free Only</label>
                 <input type="checkbox" name="is_free" id="is_free" {% if request.args.get('is_free') %}checked{% endif
                     %}>
-                <label for="is_free">Free Only</label>
             </div>
 
             <div class="filter-actions">

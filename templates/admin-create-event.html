@@ -34,6 +34,7 @@
                     <label for="start_date">Start Date & Time</label>
                     <input type="datetime-local" id="start_date" name="start_date" class="admin-input">
                 </div>
+
                 <div class="create-group" style="flex: 1;">
                     <label for="end_date">End Date & Time</label>
                     <input type="datetime-local" id="end_date" name="end_date" class="admin-input">
@@ -43,11 +44,17 @@
                     <label for="booking_deadline">Booking Deadline</label>
                     <input type="datetime-local" id="booking_deadline" name="booking_deadline" class="admin-input">
                 </div>
+                
                 <div class="create-group" style="flex: 1;">
                     <label for="original_price">Base Price (£)</label>
                     <input type="number" id="original_price" step="0.01" name="original_price" min="0" class="admin-input">
                 </div>
 
+                <div class="create-group" style="flex: 1;">
+                    <label for="tickets">No. Tickets</label>
+                    <input type="number" id="tickets" step="1" name="tickets" min="1" class="admin-input">
+                </div>
+                
                 <div class="create-group">
                     <label for="conditions">Conditions (Optional)</label>
                     <input type="text" id="conditions" name="conditions" class="admin-input">

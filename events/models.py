@@ -128,7 +128,7 @@ def get_applicable_discounts(event_id, days_until_event, is_student):
         cursor.close()
 
 
-def create_event(location_id, category_id, organiser_id, event_name, start_date, end_date, conditions, booking_deadline, description, original_price):
+def create_event(location_id, category_id, organiser_id, event_name, start_date, end_date, conditions, booking_deadline, description, original_price, tickets):
     conn = db_connector.get_connection()
     cursor = conn.cursor()
 
@@ -150,11 +150,12 @@ def create_event(location_id, category_id, organiser_id, event_name, start_date,
                 booking_deadline,
                 description,
                 original_price,
+                tickets,
                 status)
             VALUES (
-                %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """
-        cursor.execute(query, (location_id, category_id, organiser_id, event_name, start_date, end_date, conditions, booking_deadline, description, original_price, status))
+        cursor.execute(query, (location_id, category_id, organiser_id, event_name, start_date, end_date, conditions, booking_deadline, description, original_price, tickets, status))
         conn.commit()
         
         return True

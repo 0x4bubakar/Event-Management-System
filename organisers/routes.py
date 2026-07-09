@@ -2,6 +2,7 @@ from flask import Blueprint, redirect, render_template, url_for, request, flash,
 from .models import *
 from utils.decorators import is_logged_in, is_org, is_orgs_event
 from users.models import update_user, get_user_by_id
+from events.models import *
 
 organisers_bp = Blueprint('org', __name__)
 
@@ -38,7 +39,6 @@ def org_dashboard():
 @is_logged_in
 @is_org
 def org_profile():
-
     user_id = session.get("user_id")
     user_data = get_user_by_id(user_id)
     org_data = get_org_by_user_id(user_id)
@@ -76,13 +76,78 @@ def org_profile():
 @is_logged_in
 @is_org
 def org_events():
-    return render_template('org-events.html')
+    user_id = session.get("user_id")
+    org_data = get_org_by_user_id(user_id)
+    org_id = org_data['organiser_id']
+    locations = get_all_locations()
+    categories = get_all_categories()
+    suitabilities = get_all_suitabilities() 
+    events = get_all_events_org(org_id)
+    return render_template('org-events.html', locs=locations, cats=categories, suits=suitabilities, evts=events)
 
 @organisers_bp.route('/org/events/create', methods=['GET', 'POST'])
 @is_logged_in
 @is_org
 def org_create_event():
-    return render_template('org-dashboard.html')
+    user_id = session.get("user_id")
+    org_data = get_org_by_user_id(user_id)
+    org_id = org_data['organiser_id']
+    locations = get_all_locations()
+    categories = get_all_categories()
+    suitabilities = get_all_suitabilities()
+
+    if request.method == 'POST':
+        event_name = request.form.get("event_name")
+        category_id = request.form.get("category_id")
+        location_id = request.form.get("location_id")
+        start_date = request.form.get("start_date")
+        end_date = request.form.get("end_date")
+        conditions = request.form.get("conditions")
+        booking_deadline = request.form.get("booking_deadline")
+        original_price = request.form.get("original_price")
+        description = request.form.get("description")
+        try:
+            tickets = int(request.form.get("tickets"))
+        except (TypeError, ValueError):
+            tickets =y
+        loc = get_location_by_id(location_id)
+
+        dates_are_valid, error_msg = validate_event_dates(start_date, end_date, booking_deadline)
+        if not dates_are_valid:
+            flash(error_msg, "flash-error")
+            return redirect(url_for('org.org_create_event'))
+        
+        if location_id and category_id:
+            if not is_location_suitable(location_id, category_id):
+                flash("The venue is not suitable for the chosen event category.")
+                return redirect(url_for('org.org_create_event'))
+        
+        if tickets > loc['capacity']:
+            flash("The event cannot have a number of tickets greater than the capacity of the location.", "flash-error")
+            return redirect(url_for('org.org_create_event'))
+
+        if not isinstance(tickets, int) or tickets <= 0:
+            flash("Number of tickets must be a positive integer.", "flash-error")
+            return redirect(url_for('org.org_create_event'))
+        
+        if create_event(location_id=location_id, 
+            category_id=category_id, 
+            event_name=event_name, 
+            start_date=start_date, 
+            end_date=end_date, 
+            conditions=conditions, 
+            booking_deadline=booking_deadline, 
+            description=description, 
+            original_price=original_price,
+            tickets=tickets,
+            organiser_id=org_id):
+            flash("Event successfully created.", "flash-success")
+            return redirect(url_for('admin.admin_events'))
+        else:
+            flash("Failed to create event.", "flash-error")
+
+
+    return render_template('org-create-event.html', locs=locations, cats=categories, suits=suitabilities)
 
 @organisers_bp.route('/org/events/<int:event_id>', methods=['GET', 'POST'])
 @is_logged_in

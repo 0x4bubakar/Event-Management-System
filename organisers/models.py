@@ -64,3 +64,28 @@ def edit_org_profile(org_id,  description):
     
     finally:
         cursor.close()
+
+def get_all_events_org(org_id):
+    conn = db_connector.get_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    try:
+        query = """
+            SELECT e.event_id, e.event_name, e.start_date, e.original_price, e.tickets,
+            c.category_name, l.name as location_name, l.capacity,
+            (SELECT COUNT(*) FROM booking b WHERE b.event_id = e.event_id AND b.status = 'confirmed') AS tickets_sold
+            FROM event e
+            JOIN category c ON e.category_id = c.category_id
+            JOIN location l ON e.location_id = l.location_id
+            WHERE e.organiser_id = %s
+        """
+
+        cursor.execute(query, (org_id,))
+        return cursor.fetchall()
+    
+    except Exception as e:
+        print(f"Error with fetching events: {str(e)}")
+        return []
+    
+    finally:
+        cursor.close()

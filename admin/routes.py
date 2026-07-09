@@ -29,6 +29,10 @@ def admin_events():
 @is_logged_in
 @is_admin
 def new_event():
+    locations = get_all_locations()
+    categories = get_all_categories()
+    suitabilities = get_all_suitabilities()
+
     if request.method == 'POST':
         event_name = request.form.get("event_name")
         category_id = request.form.get("category_id")
@@ -39,6 +43,12 @@ def new_event():
         booking_deadline = request.form.get("booking_deadline")
         original_price = request.form.get("original_price")
         description = request.form.get("description")
+        tickets = request.form.get("tickets")
+        try:
+            tickets = int(request.form.get("tickets"))
+        except (TypeError, ValueError):
+            tickets =y
+        loc = get_location_by_id(location_id)
 
         dates_are_valid, error_msg = validate_event_dates(start_date, end_date, booking_deadline)
         if not dates_are_valid:
@@ -49,7 +59,15 @@ def new_event():
             if not is_location_suitable(location_id, category_id):
                 flash("The venue is not suitable for the chosen event category.")
                 return redirect(url_for('admin.new_event'))
-            
+        
+        if tickets > loc['capacity']:
+            flash("The event cannot have a number of tickets greater than the capacity of the location.", "flash-error")
+            return redirect(url_for('admin.new_event'))
+
+        if not isinstance(tickets, int) or tickets <= 0:
+            flash("Number of tickets must be a positive integer.", "flash-error")
+            return redirect(url_for('admin.new_event'))
+
         if create_event(location_id=location_id, 
             category_id=category_id, 
             organiser_id=None, # explicitly passing none as creator is an admin, not an organiser
@@ -59,15 +77,13 @@ def new_event():
             conditions=conditions, 
             booking_deadline=booking_deadline, 
             description=description, 
-            original_price=original_price):
+            original_price=original_price,
+            tickets=tickets):
             flash("Event successfully created.", "flash-success")
             return redirect(url_for('admin.admin_events'))
         else:
             flash("Failed to create event.", "flash-error")
 
-    locations = get_all_locations()
-    categories = get_all_categories()
-    suitabilities = get_all_suitabilities()
     return render_template('admin-create-event.html', locs = locations, cats = categories, suits = suitabilities)
 
 @admin_bp.route('/admin/events/<int:event_id>', methods=['GET', 'POST'])

@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% block title %}Admin Dashboard - {% block page_header %}{% endblock %}| Bristol Community Events{% endblock %}
+{% block title %}{% block page_header %}{% endblock %}| Bristol Community Events{% endblock %}
 {% block styles %}
 <link rel="stylesheet" href="{{ url_for('static', filename='user-dashboard.css') }}" />
 <link rel="stylesheet" href="{{ url_for('static', filename='admin-dashboard.css') }}" />

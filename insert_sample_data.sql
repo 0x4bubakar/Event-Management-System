@@ -3,6 +3,7 @@
 -- (i.e. discounts, categories, venues, etc.) 
 -- as required by assessment specification.
 -- -----------------------------------------------------
+USE wdadb;
 
 -- Insert permanent discounts (early bird and student)
 INSERT INTO discount(name, percent, event_id) VALUES
