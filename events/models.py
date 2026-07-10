@@ -395,6 +395,7 @@ def edit_events(location_id, category_id, organiser_id, event_name, start_date, 
         return True
     
     except Exception as e:
+        conn.rollback()
         print(f"Error editing event: {e}")
         return False
     
@@ -471,5 +472,24 @@ def get_location_by_id(location_id):
     except Exception as e:
         print(f"Error fetching location: {e}")
         return None
+    finally:
+        cursor.close()
+
+def add_last_minute_discount(event_id, percent):
+    conn = db_connector.get_connection()
+    cursor = conn.cursor()
+
+    try:
+        discount_name = f"Last Minute {percent}"
+        query = "INSERT INTO discount (name, percent, event_id) VALUES (%s, %s, %s)"
+        cursor.execute(query, (discount_name, percent, event_id))
+        conn.commit()
+        return True
+    
+    except Exception as e:
+        conn.rollback()
+        print(f"Error creating last minute discount: {str(e)}")
+        return False
+    
     finally:
         cursor.close()

@@ -45,10 +45,10 @@ Note: the following requirements have been taken from the assessment briefs offe
 - [x] If less than 50% of bookings are made within 10 days of an event, admin should be able to lower the ticket price by at least 25%.
 
 ### Event Organiser perspective
-- [ ] An event organiser should be able to register/Login/Logout/password update.
-- [ ] An event organiser should be able to create/update/cancel event on BCE website; set price constraints, discounts, number of available tickets, venue, dates, etc.
-- [ ] There is a fixed fee of £100 for hosting an event via the BCE website. After the event has been created the event organiser should be prompted to pay the fee before publishing.
-- [ ] Event is saved as a "draft" that can be edited until the organiser chooses to publish the event.
+- [x] An event organiser should be able to register/Login/Logout/password update.
+- [x] An event organiser should be able to create/update/cancel event on BCE website; set price constraints, discounts, number of available tickets, venue, dates, etc.
+- [x] There is a fixed fee of £100 for hosting an event via the BCE website. After the event has been created the event organiser should be prompted to pay the fee before publishing.
+- [x] Event is saved as a "draft" that can be edited until the organiser chooses to publish the event.
 
 ### Database Design
 Entity Relationship Diagram to be uploaded soon!

@@ -52,6 +52,16 @@
     border-color: #ffc107;
 }
 
+.draft-status-banner h3 {
+    margin-bottom: 0.5rem;
+    font-size: 1.2rem;
+}
+
+.draft-status-banner p {
+    margin-bottom: 1rem; 
+    color: #555;
+}
+
 .published-status-banner {
     padding: 1rem;
     margin-bottom: 1.5rem;

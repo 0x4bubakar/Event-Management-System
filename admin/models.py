@@ -53,7 +53,7 @@ def get_all_events_admin():
 
     try:
         query = """
-            SELECT e.event_id, e.event_name, e.start_date, e.original_price,
+            SELECT e.event_id, e.event_name, e.start_date, e.original_price, e.status,
             c.category_name, l.name as location_name, l.capacity,
             (SELECT COUNT(*) FROM booking b WHERE b.event_id = e.event_id AND b.status = 'confirmed') AS tickets_sold
             FROM event e

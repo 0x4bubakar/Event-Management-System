@@ -59,6 +59,7 @@ def edit_org_profile(org_id,  description):
         return True
     
     except Exception as e:
+        conn.rollback()
         print(f"Error editing organiser profile: {e}")
         return False
     

@@ -18,8 +18,8 @@
             {% if event.status == 'published' %}
                 <p style="margin: 0; color: #2e7d32;">This event is currently live and visible to users.</p>
             {% else %}
-                <p style="margin: 0 0 1rem 0; color: #555;">This event is saved as a draft. It will not be visible to users until the fee is paid and it is published.</p>
-                <a href="{{ url_for('org.org_pay_fee', event_id=event.event_id) }}" class="blue-btn" style="text-decoration: none; display: inline-block;">Pay Fee & Publish Event</a>
+                <p>This event is saved as a draft. It will not be visible to users until the fee is paid and it is published.</p>
+                <a href="{{ url_for('org.org_pay_fee', event_id=event.event_id) }}" class="blue-btn">Pay Fee & Publish Event</a>
             {% endif %}
             
     </div>

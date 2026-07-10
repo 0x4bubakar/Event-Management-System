@@ -1,9 +1,10 @@
 from flask import Blueprint, redirect, render_template, url_for, request, flash, session
 from utils.decorators import is_logged_in, is_admin
-from events.models import get_all_locations, get_all_categories, get_all_suitabilities, get_event_by_id, create_category, create_event, delete_event, create_location, edit_events, is_location_suitable, validate_event_dates, edit_location, get_location_by_id
+from events.models import get_all_locations, get_all_categories, get_all_suitabilities, get_event_by_id, create_category, create_event, delete_event, create_location, edit_events, is_location_suitable, validate_event_dates, edit_location, get_location_by_id, add_last_minute_discount
 from reports.models import get_revenue_reports
 from .models import *
 from users.models import delete_account as db_delete_account
+from datetime import datetime
 
 admin_bp = Blueprint('admin', __name__)
 
@@ -91,7 +92,29 @@ def new_event():
 @is_logged_in
 @is_admin
 def edit_event_route(event_id):
+    event_data = get_event_by_id(event_id)
+    now = datetime.now()
+
+    days_until_event = (event_data['start_date'] - now).days
+    tickets_sold = event_data.get('tickets_sold', 0)
+    total_tickets = event_data.get('tickets', 1)
+
+    can_discount = (tickets_sold < (total_tickets * 0.5) and (days_until_event <= 10))
+
     if request.method == 'POST':
+        if 'discount_percent' in request.form:
+            percent = float(request.form.get("discount_percent"))
+
+            if percent >= 25:
+                if add_last_minute_discount(event_id, percent):
+                    flash(f"Successfully applied a {percent}% discount to the event!", "flash-success")
+                else:
+                    flash("Database error: Could not apply discount.", "flash-error")
+            else:
+                flash("The discount must be at least 25%.", "flash-error")
+
+            return redirect(url_for('admin.edit_event_route', event_id=event_id))
+
         event_name = request.form.get("event_name")
         category_id = request.form.get("category_id")
         location_id = request.form.get("location_id")
@@ -142,7 +165,8 @@ def edit_event_route(event_id):
                            event=event_data,
                            locs=locations,
                            cats=categories,
-                           suits=suitabilities)
+                           suits=suitabilities,
+                           can_discount=can_discount)
 
 @admin_bp.route('/admin/events/delete/<int:event_id>', methods=['POST'])
 @is_logged_in

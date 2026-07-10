@@ -4,6 +4,21 @@
 {% block admin_content %}
 <section class="dash-section">
     
+    {% if can_discount %}
+    <div class="draft-status-banner">
+            <h3>Last Minute Booster</h3>
+                <p>This event is less than 10 days away and less than 50% of tickets are booked.</p>
+                <p>You can apply a promotional discount to encourage sales (minimum 25% off)</p>
+                <form method="POST" action="{{ url_for('admin.edit_event_route', event_id=event_id) }}" style="display: flex; gap: 10px; align-items: center;">
+                <label for="discount_percent" style="font-weight: bold;">Discount % :</label>
+
+                <input type="number" name="discount_percent" id="discount_percent" min="25" max="100" step="1" required style="padding: 10px; width: 100px; margin: 0;">
+
+                <button type="submit" class="blue-btn" style="margin: 0;">Apply Promo</button>
+                </form>
+    </div>
+    {% endif %}
+
     <div class="create-container">
         <form method="POST" action="{{ url_for('admin.edit_event_route', event_id=event.event_id) }}">
             
