@@ -41,3 +41,21 @@
     border: 1px solid #ddd; 
     text-align: center;
 }
+
+
+.draft-status-banner {
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    background: #fff8e1; 
+    border-color: #ffc107;
+}
+
+.published-status-banner {
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    border-radius: 8px;
+    border-color: #4caf50;
+    background: #eef7ee; 
+}

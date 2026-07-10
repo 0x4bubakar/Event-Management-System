@@ -18,8 +18,11 @@
             <th style="padding: 10px;">Venue</th>
             <th style="padding: 10px;">Date</th>
             <th style="padding: 10px;">Base Price</th>
+            <th style="padding: 10px;">Status</th>
             <th style="padding: 10px;">Availability</th>
+            {% if evt.tickets_sold >= evt.capacity %}
             <th style="padding: 10px;">Waitlisted Users</th>
+            {% endif %}
             <th style="padding: 10px;">Actions</th>
         </tr>
         <tr style="border-bottom: 1px solid #eee;">
@@ -29,15 +32,15 @@
             <td style="padding: 10px;">{{ evt.location_name }}</td>
             <td style="padding: 10px;">{{ evt.start_date.strftime('%d %B %Y, %H:%M') }}</td>
             <td style="padding: 10px;">£{{ "%.2f"|format(evt.original_price) }}</td>
+            <td style="padding: 10px;">{% if evt.status == "published" %}Published{% else %}Draft{% endif %}</td>
             {% if evt.tickets_sold >= evt.capacity %}
             <td style="padding: 10px;"><span style="color: red; font-weight: bold;">FULLY BOOKED</span></td>
             <td style="padding: 10px;">{{ evt.waitlisted }}</td>
             {% else %}
-            <td style="padding: 10px;"><span style="color: green; font-weight: bold;">AVAILABLE</span></td>
-            <td style="padding: 10px;">0</td>
+            <td style="padding: 10px;"><span style="color: green; font-weight: bold;">TICKETS AVAILABLE</span></td>
             {% endif %}
             <td style="padding: 10px; display: flex; gap: 0.5rem;">
-                <a href="{{ url_for('admin.edit_event_route', event_id=evt.event_id) }}" class="blue-btn" style="padding: 5px 10px; text-decoration: none; font-size: 0.9rem;">Edit</a>
+                <a href="{{ url_for('org.org_edit_event', event_id=evt.event_id) }}" class="blue-btn" style="padding: 5px 10px; text-decoration: none; font-size: 0.9rem;">Edit</a>
                 <form method="POST" action="{{ url_for('admin.delete_event_route', event_id=evt.event_id) }}" style="margin: 0;">
                     <button type="submit" class="red-btn" style="padding: 5px 10px; font-size: 0.9rem;">Delete</button>
                 </form>

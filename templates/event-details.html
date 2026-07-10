@@ -16,7 +16,7 @@
     <p><strong>Price:</strong> £{{ event.original_price }}</p>
     <p><strong>Venue:</strong> {{ event.location_name }}</p>
     <p><strong>Booking Deadline:</strong> {{ event.booking_deadline.strftime('%d %B %Y, %H:%M') }}</p>
-
+    {% if days_until_event <= 60 %}
     {% if event.conditions %}
     <p><strong>Conditions:</strong> {{ event.conditions }}</p>
     {% endif %}
@@ -34,7 +34,7 @@
   <p class="desc">{{ event.description }}</p>
 
   {% if not deadline_passed %}
-  {% if not session.get('role') == 'admin' %}
+  {% if session.get('role') not in ['admin', 'organiser'] %}
   {% if not session.get('user_id') %}
   <p style="margin-bottom: 15px; color: #666;">You must be logged in to book tickets.</p>
   <a href="{{ url_for('auth.login') }}" class="blue-btn" style="text-decoration: none;">Log In to Book</a>
@@ -60,11 +60,16 @@
     {% endif %}
     {% endif %}
   </form>
-  {% else %}
+  {% elif session.get('role') == 'admin' %}
   <p>Admins can't book tickets! Please sign into a user account.</p>
+  {% elif session.get('role') == 'organiser' %}
+  <p>Organisers can't book tickets! Please sign into a user account.</p>
   {% endif %}
   {% else %}
   <p>The booking deadline has passed - you are no longer able to book!</p>
+  {% endif %}
+  {% else %}
+  <p>Users cannot book tickets for events earlier than 2 months prior to the deadline. Please come back at a later date!</p>
   {% endif %}
 </div>
 

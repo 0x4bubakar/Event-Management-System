@@ -49,10 +49,10 @@ def is_orgs_event(f):
         from organisers.models import get_org_by_user_id
         user_id = session.get("user_id")
         event_id = kwargs.get('event_id')
-        org_id = get_org_by_user_id(user_id)
+        org_data = get_org_by_user_id(user_id)
         event = get_event_by_id(event_id)
 
-        if org_id == event['organiser_id']:
+        if org_data and org_data['organiser_id'] == event['organiser_id']:
             return f(*args, **kwargs)
         else:
             flash("You are not authorised to view this page.", "flash-error")

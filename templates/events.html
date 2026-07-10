@@ -92,14 +92,4 @@
         {% endfor %}
     </div>
 </div>
-
-{% block scripts %}
-<script>
-    const btn = document.getElementById("menu-btn");
-    const menu = document.getElementById("nav-menu");
-    if (btn && menu) {
-        btn.addEventListener("click", () => menu.classList.toggle("open"));
-    }
-</script>
-{% endblock %}
 {% endblock %}

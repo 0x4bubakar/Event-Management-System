@@ -120,7 +120,8 @@ def get_bookings_by_id(user_id):
             booking.days_booked, 
             booking.status, 
             (booking.booked_base_price - COALESCE(SUM(booking_discounts.amount_deducted),0)) as final_price, 
-            booking.booking_id 
+            booking.booking_id,
+            booking.attendee_name
         FROM 
             booking 
         JOIN 
@@ -149,7 +150,8 @@ def get_bookings_by_id(user_id):
                 "days_booked": row[2],
                 "booking_status": row[3],
                 "final_price": float(row[4]),
-                "booking_id": row[5]
+                "booking_id": row[5],
+                "attendee_name": row[6]
             })
 
         return bookingsList

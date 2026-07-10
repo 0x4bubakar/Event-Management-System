@@ -89,3 +89,19 @@ def get_all_events_org(org_id):
     
     finally:
         cursor.close()
+
+def publish_draft_event(event_id):
+    conn = db_connector.get_connection()
+    cursor = conn.cursor()
+
+    try:
+        publish_query = "UPDATE event SET status = 'published' WHERE event_id = %s"
+        cursor.execute(publish_query, (event_id,))
+        return True
+    
+    except Exception as e:
+        print(f"Error publishing event: {e}")
+        return False
+    
+    finally:
+        cursor.close()

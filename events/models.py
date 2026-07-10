@@ -157,13 +157,13 @@ def create_event(location_id, category_id, organiser_id, event_name, start_date,
         """
         cursor.execute(query, (location_id, category_id, organiser_id, event_name, start_date, end_date, conditions, booking_deadline, description, original_price, tickets, status))
         conn.commit()
-        
-        return True
+        event_id = cursor.lastrowid
+        return event_id
     
     except Exception as e:
         conn.rollback()
         print(f"Error creating event: {str(e)}")
-        return False
+        return None
     
     finally:
         cursor.close()
@@ -273,7 +273,7 @@ def get_public_events(category_id, start_date, end_date, is_free):
             JOIN
                 location l ON e.location_id = l.location_id
             WHERE 
-                1=1
+                e.status = 'published'
         """
         params = []
 
@@ -331,7 +331,7 @@ def fetch_recent_events():
      finally:
          cursor.close()
 
-def edit_events(location_id, category_id, organiser_id, event_name, start_date, end_date, conditions, booking_deadline, description, original_price, event_id):
+def edit_events(location_id, category_id, organiser_id, event_name, start_date, end_date, conditions, booking_deadline, description, original_price, event_id, tickets):
     conn = db_connector.get_connection()
     cursor = conn.cursor(dictionary=True)
 
@@ -378,6 +378,10 @@ def edit_events(location_id, category_id, organiser_id, event_name, start_date, 
         if original_price:
             set_clauses.append("original_price = %s")
             params.append(original_price)
+
+        if tickets:
+            set_clauses.append("tickets = %s")
+            params.append(tickets)
         
         if not set_clauses: # if nothing was actually edited, return false
             return False

@@ -1,0 +1,148 @@
+{% extends "layout-org.html" %}
+{% block page_header %}Edit Event{% endblock %}
+
+{% block admin_content %}
+<section class="dash-section">
+
+     <div class="{% if event.status == 'published' %}published-status-banner{% else %}draft-status-banner{% endif %}">
+            
+            <h3 style="margin: 0 0 0.5rem 0; font-size: 1.2rem;">
+                Event Status: 
+                {% if event.status == 'published' %}
+                    <span style="color: green;">PUBLISHED</span>
+                {% else %}
+                    <span style="color: red;">DRAFT</span>
+                {% endif %}
+            </h3>
+            
+            {% if event.status == 'published' %}
+                <p style="margin: 0; color: #2e7d32;">This event is currently live and visible to users.</p>
+            {% else %}
+                <p style="margin: 0 0 1rem 0; color: #555;">This event is saved as a draft. It will not be visible to users until the fee is paid and it is published.</p>
+                <a href="{{ url_for('org.org_pay_fee', event_id=event.event_id) }}" class="blue-btn" style="text-decoration: none; display: inline-block;">Pay Fee & Publish Event</a>
+            {% endif %}
+            
+    </div>
+    
+    <div class="create-container">
+        <form method="POST" action="{{ url_for('org.org_edit_event', event_id=event.event_id) }}">
+            
+            <div class="create-group">
+                <label for="event_name">Event Name</label>
+                <input type="text" id="event_name" name="event_name" class="admin-input" value="{{ event.event_name }}">
+            </div>
+
+            <div class="create-group" style="flex: 1;">
+                <label for="category_id">Category</label>
+                <select id="category_id" name="category_id" class="admin-input">
+                    <option value="" disabled>Select a Category</option>
+                    {% for cat in cats %}
+                        <option value="{{ cat.category_id }}" {% if cat.category_id == event.category_id %}selected{% endif %}>
+                            {{ cat.category_name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="create-group" style="flex: 1;">
+                <label for="location_id">Venue</label>
+                <select id="location_id" name="location_id" class="admin-input">
+                    <option value="" disabled>Select a Venue</option>
+                    {% for loc in locs %}
+                        <option value="{{ loc.location_id }}" {% if loc.location_id == event.location_id %}selected{% endif %}>
+                            {{ loc.name }} (Cap: {{ loc.capacity }})
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="create-group" style="flex: 1;">
+                <label for="start_date">Start Date & Time</label>
+                <input type="datetime-local" id="start_date" name="start_date" class="admin-input" value="{{ event.start_date.strftime('%Y-%m-%dT%H:%M') }}">
+            </div>
+            <div class="create-group" style="flex: 1;">
+                <label for="end_date">End Date & Time</label>
+                <input type="datetime-local" id="end_date" name="end_date" class="admin-input" value="{{ event.end_date.strftime('%Y-%m-%dT%H:%M') }}">
+            </div>
+
+            <div class="create-group" style="flex: 1;">
+                <label for="booking_deadline">Booking Deadline</label>
+                <input type="datetime-local" id="booking_deadline" name="booking_deadline" class="admin-input" value="{{ event.booking_deadline.strftime('%Y-%m-%dT%H:%M') }}">
+            </div>
+            <div class="create-group" style="flex: 1;">
+                <label for="original_price">Base Price (£)</label>
+                <input type="number" id="original_price" step="0.01" name="original_price" min="0" class="admin-input" value="{{ event.original_price }}">
+            </div>
+
+            <div class="create-group">
+                <label for="conditions">Conditions (Optional)</label>
+                <input type="text" id="conditions" name="conditions" class="admin-input" value="{{ event.conditions or '' }}">
+            </div>
+
+            <div class="create-group">
+                <label for="tickets">Number of tickets</label>
+                <input type="number" id="tickets" name="tickets" class="admin-input" min=1 value="{{ event.tickets }}">
+            </div>
+
+            <div class="create-group">
+                <label for="description">Description</label>
+                <textarea id="description" name="description" rows="4" class="admin-input" style="height: auto; padding: 0.8rem;">{{ event.description }}</textarea>
+            </div>
+
+            <div class="create-actions">
+                <button type="submit" class="blue-btn">Save Changes</button>
+                <a href="{{ url_for('org.org_events') }}" class="red-btn">Cancel</a>
+            </div>
+            
+        </form>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const categorySelect = document.getElementById('category_id');
+        const locationSelect = document.getElementById('location_id');
+        const suitabilityMap = {{ suits | tojson | safe }};
+        
+        function updateLocations() {
+            // grab value of selected category - i.e. the category id
+            const selectedCategoryId = parseInt(categorySelect.value);
+            // make list of allowed venues
+            // .filter() sifts through the entire suitability map and discards anything not matching the selected category
+            // .map() takes the filtered list and extracts only the venue ids and converts them to text strings
+            // we are then returned with an array of allowed venue ids like ["1", "2", "3", ...]
+            const validLocationIds = suitabilityMap.filter(function(item) {
+                    return item.category_id === selectedCategoryId
+                })
+                .map(function(item) {
+                    return item.location_id.toString();
+                });
+
+                for (let i = 0; i < locationSelect.options.length; i++) {
+                    let locOption = locationSelect.options[i]
+                    if (locOption.value === "") continue; // ignore "select a venue"
+                    if (validLocationIds.includes(locOption.value)) {
+                        locOption.disabled = false;
+                        locOption.style.color = "inherit";
+                    } else {
+                        locOption.disabled = true;
+                        locOption.style.color = "#ccc"
+                    }
+                }
+        }
+
+        // run immediately on load to set up initial state correctly
+        if (categorySelect.value) {
+            updateLocations();
+        }
+
+        // run whenever category is changed
+        categorySelect.addEventListener('change', function() {
+            locationSelect.selectedIndex = 0;
+            updateLocations();
+        })
+        });
+</script>
+{% endblock %}

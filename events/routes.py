@@ -20,16 +20,14 @@ def events():
 @events_bp.route("/events/<int:event_id>")
 def event_details(event_id):
     event = get_event_by_id(event_id)
-    if not event:
-        flash("Event not found", "flash-error")
-        return redirect(url_for('events.events'))
-    
     total_event_days = (event['end_date'].date() - event['start_date'].date()).days + 1
     tickets_left = event['capacity'] - event['tickets_sold']
     is_sold_out = tickets_left <= 0
+    status = event['status']
 
     now = datetime.now()
     days_until_event = (event['start_date'] - now).days
+    days_until_deadline = (event['deadline'] - now).days
     deadline_passed = now >= event['booking_deadline']
 
     discount_multiplier = 1
@@ -38,6 +36,13 @@ def event_details(event_id):
     
     applicable_discounts = get_applicable_discounts(event_id, days_until_event, is_student)
 
+    if not event:
+        flash("Event not found", "flash-error")
+        return redirect(url_for('events.events'))
+    
+    if status == "draft":
+        flash("Event not found.", "flash-error")
+        return redirect(url_for('events.events'))
 
     return render_template("event-details.html", 
                            event=event,
@@ -47,7 +52,8 @@ def event_details(event_id):
                            discount_multiplier=discount_multiplier, 
                            is_student=is_student, 
                            deadline_passed=deadline_passed,
-                           applicable_discounts=applicable_discounts)
+                           applicable_discounts=applicable_discounts,
+                           days_until_deadline=days_until_deadline)
 
 @events_bp.route("/category/<name>")
 def category(name):

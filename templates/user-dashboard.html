@@ -56,6 +56,7 @@
             <thead>
                 <tr>
                     <th>Event</th>
+                    <th>Attendee Name</th>
                     <th>Start Date</th>
                     <th># of Days Booked</th>
                     <th>Booking Status</th>
@@ -67,6 +68,7 @@
                 {% for booking in bookings %}
                 <tr>
                     <td>{{booking.event_name}}</td>
+                    <td>{{booking.attendee_name}}</td>
                     <td>{{booking.start_date.strftime('%d %B %Y, %A')}}</td>
                     <td>{{booking.days_booked}}</td>
                     <td>{{booking.booking_status}}</td>

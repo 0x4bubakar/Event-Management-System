@@ -43,11 +43,10 @@ def new_event():
         booking_deadline = request.form.get("booking_deadline")
         original_price = request.form.get("original_price")
         description = request.form.get("description")
-        tickets = request.form.get("tickets")
-        try:
-            tickets = int(request.form.get("tickets"))
-        except (TypeError, ValueError):
-            tickets =y
+        tickets = int(request.form.get("tickets"))
+        if not tickets:
+            flash("Please input a number of tickets", "flash-error")
+            
         loc = get_location_by_id(location_id)
 
         dates_are_valid, error_msg = validate_event_dates(start_date, end_date, booking_deadline)
@@ -68,7 +67,7 @@ def new_event():
             flash("Number of tickets must be a positive integer.", "flash-error")
             return redirect(url_for('admin.new_event'))
 
-        if create_event(location_id=location_id, 
+        event_id = create_event(location_id=location_id, 
             category_id=category_id, 
             organiser_id=None, # explicitly passing none as creator is an admin, not an organiser
             event_name=event_name, 
@@ -78,7 +77,9 @@ def new_event():
             booking_deadline=booking_deadline, 
             description=description, 
             original_price=original_price,
-            tickets=tickets):
+            tickets=tickets) 
+        
+        if event_id is not None:
             flash("Event successfully created.", "flash-success")
             return redirect(url_for('admin.admin_events'))
         else:
@@ -100,12 +101,16 @@ def edit_event_route(event_id):
         booking_deadline = request.form.get("booking_deadline")
         original_price = request.form.get("original_price")
         description = request.form.get("description")
+        tickets = request.form.get("tickets")
 
         dates_are_valid, error_msg = validate_event_dates(start_date, end_date, booking_deadline)
         if not dates_are_valid:
             flash(error_msg, "flash-error")
             return redirect('admin.edit_event_route')
         
+        if not tickets:
+            flash("Please input a number of tickets", "flash-error")
+
         if location_id and category_id:
             if not is_location_suitable(location_id, category_id):
                 flash("The venue is not suitable for the chosen event category.")
@@ -120,7 +125,8 @@ def edit_event_route(event_id):
             booking_deadline=booking_deadline, 
             description=description, 
             original_price=original_price,
-            event_id=event_id):
+            event_id=event_id,
+            tickets=tickets):
             flash("Event successfully edited.", "flash-success")
             return redirect(url_for('admin.admin_events'))
         else:
