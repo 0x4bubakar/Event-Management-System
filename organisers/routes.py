@@ -144,7 +144,7 @@ def org_create_event():
         
         if event_id is not None:
             flash("Event successfully created.", "flash-success")
-            return redirect(url_for('org.org_pay_fee'), event_id=event_id)
+            return redirect(url_for('org.org_pay_fee', event_id=event_id))
         else:
             flash("Failed to create event.", "flash-error")
 

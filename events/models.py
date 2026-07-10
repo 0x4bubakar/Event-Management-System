@@ -316,7 +316,7 @@ def fetch_recent_events():
             JOIN
                 location l ON e.location_id = l.location_id
             WHERE
-                e.start_date > NOW()
+                e.start_date > NOW() AND e.status = 'published'
             ORDER BY
                 e.start_date ASC
             LIMIT 4
@@ -438,27 +438,25 @@ def edit_location(name, capacity, address, suitabilities, location_id):
             set_clauses.append("address = %s")
             params.append(address)
         
-        if not set_clauses: # if nothing was actually edited, return false
-            return False
-        
-        params.append(location_id)
+        if set_clauses:
+            params.append(location_id)
+            edit_query = "UPDATE location SET " + ", ".join(set_clauses) + " WHERE location_id = %s"
+            cursor.execute(edit_query, (tuple(params)))
 
-        edit_query = "UPDATE location SET " + ", ".join(set_clauses) + " WHERE location_id = %s"
-        cursor.execute(edit_query, (tuple(params)))
-
-        new_location_id = cursor.lastrowid
-        
-        if suitabilities:
+        if suitabilities is not None:
+            # Clear all previous category suitability links
+            cursor.execute("DELETE FROM suitability WHERE location_id = %s", (location_id,))
+            # Insert new category links
             suit_query = "INSERT INTO suitability (location_id, category_id) VALUES (%s, %s)"
             for category_id in suitabilities:
-                cursor.execute(suit_query, (new_location_id, category_id))
+                cursor.execute(suit_query, (location_id, category_id))
 
         conn.commit()
         return True
     
     except Exception as e:
         conn.rollback()
-        print(f"Error creating location: {str(e)}")
+        print(f"Error editing location: {str(e)}")
         return False
     
     finally:

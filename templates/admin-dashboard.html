@@ -20,11 +20,11 @@
     </section>
 </section>
 
-<section class="dash-section">
+<section class="dash-section btn-container">
     <a href="{{ url_for('admin.admin_events') }}" class="blue-btn">Manage Events</a>
-    <a href="{{ url_for('admin.admin_events') }}" class="blue-btn">Manage Venues</a>
-    <a href="{{ url_for('admin.admin_events') }}" class="blue-btn">Manage Categories</a>
-    <a href="{{ url_for('admin.admin_events') }}" class="blue-btn">Manage Users</a>
-    <a href="{{ url_for('admin.admin_events') }}" class="blue-btn">View Reports</a>
+    <a href="{{ url_for('admin.locations_route') }}" class="blue-btn">Manage Venues</a>
+    <a href="{{ url_for('admin.categories_route') }}" class="blue-btn">Manage Categories</a>
+    <a href="{{ url_for('admin.admin_users') }}" class="blue-btn">Manage Users</a>
+    <a href="{{ url_for('admin.admin_users') }}" class="blue-btn">View Reports</a>
 </section>
 {% endblock %}

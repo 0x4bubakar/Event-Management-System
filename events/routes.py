@@ -27,7 +27,7 @@ def event_details(event_id):
 
     now = datetime.now()
     days_until_event = (event['start_date'] - now).days
-    days_until_deadline = (event['deadline'] - now).days
+    days_until_deadline = (event['booking_deadline'] - now).days
     deadline_passed = now >= event['booking_deadline']
 
     discount_multiplier = 1

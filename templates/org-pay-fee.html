@@ -6,9 +6,11 @@
     <div class="header-2">
         <h2>Pay Organiser Fee</h2>
     </div>
-    <p>There is a fixed price of £100 to host events as an organiser via the BCE website.</p>
-    <p>Your event <em>{{ evt.event_name }}</em> is currently a draft.</p>
-    <p>When you are ready, please press the button below to make your payment.</p>
+    <div style="margin-bottom: 1rem;">
+        <p>There is a fixed price of £100 to host events as an organiser via the BCE website.</p>
+        <p>Your event <em>{{ evt.event_name }}</em> is currently a draft.</p>
+        <p>When you are ready, please press the button below to make your payment.</p>
+    </div>
     <form method="POST" action="{{ url_for('org.org_pay_fee', event_id=evt.event_id) }}">
         <input class="blue-btn" type="submit" value="Pay fee">
     </form>

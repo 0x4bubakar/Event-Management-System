@@ -10,12 +10,7 @@ endblock %} {% block styles %}
         - if it's happening it's on our radar!</p>
     </div>
     <div class="search">
-      <form method="GET" action="{{url_for('events.events')}}">
-        <input type="text" placeholder="Where to next?" size="30" />
-      </form>
-
-      <p><i><b>Try: "street food", "tech meetup", "open mic"</i></b></p>
-    </div>
+      <a href="{{ url_for('events.events') }}" class="blue-btn">Explore things to do in Bristol</a>
   </div>
 </section>
 

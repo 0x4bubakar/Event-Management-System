@@ -71,7 +71,7 @@ def get_all_events_org(org_id):
 
     try:
         query = """
-            SELECT e.event_id, e.event_name, e.start_date, e.original_price, e.tickets,
+            SELECT e.event_id, e.event_name, e.start_date, e.original_price, e.tickets, e.status,
             c.category_name, l.name as location_name, l.capacity,
             (SELECT COUNT(*) FROM booking b WHERE b.event_id = e.event_id AND b.status = 'confirmed') AS tickets_sold
             FROM event e
@@ -97,6 +97,7 @@ def publish_draft_event(event_id):
     try:
         publish_query = "UPDATE event SET status = 'published' WHERE event_id = %s"
         cursor.execute(publish_query, (event_id,))
+        conn.commit()
         return True
     
     except Exception as e:

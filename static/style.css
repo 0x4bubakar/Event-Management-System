@@ -193,41 +193,48 @@ form textarea {
 }
 
 .blue-btn {
-  border: 1px solid #0074ff;
-  color: #0074ff;
-  background-color: transparent;
+  border: white;
+  color: white;
+  background-color: #0074ff;
   padding: 0.5rem 1rem;
   border-radius: 5px;
-  font-size: 0.9rem;
   text-decoration: none;
-  background-color: transparent;
   transition: background-color 0.3s ease, transform 0.1s;
+  margin: 0.5rem;
 }
 
 .red-btn {
-  border: 1px solid red;
-  color: red;
-  background-color: transparent;
+  border: white;
+  color: white;
+  background-color: red;
   padding: 0.5rem 1rem;
   border-radius: 5px;
   font-size: 0.9rem;
   text-decoration: none;
-  background-color: transparent;
   transition: background-color 0.3s ease, transform 0.1s;
+  margin: 0.5rem;
 }
 
 .blue-btn:hover {
   border: white;
   color: white;
-  background-color: #0074ff;
+  background-color: #0073ffbe;
 }
 
 .red-btn:hover {
   border: white;
   color: white;
-  background-color: red;
+  background-color: rgba(255, 0, 0, 0.701);
 }
 
 button:active {
   transform: scale(0.98);
+}
+
+.btn-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
 }

@@ -198,6 +198,7 @@ def edit_location_route(location_id):
 
         if edit_location(name, capacity, address, suitabilities, location_id):
             flash("Venue successfully edited.", "flash-success")
+            return redirect(url_for('admin.admin_dashboard'))
         else:
             flash("Failed to edit venue.", "flash-error")
     
