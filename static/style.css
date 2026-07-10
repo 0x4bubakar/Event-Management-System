@@ -180,8 +180,18 @@ form textarea {
 
 .content-container {
   max-width: 1100px;
-  margin: auto;
   padding: 1.5rem;
+  margin: 2rem auto;
+}
+
+.create-container {
+    width: 100%;
+    max-width: 800px;
+    background-color: #fff;
+    padding: 2rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin: 2rem auto;
 }
 
 .view-mode {
@@ -200,7 +210,6 @@ form textarea {
   border-radius: 5px;
   text-decoration: none;
   transition: background-color 0.3s ease, transform 0.1s;
-  margin: 0.5rem;
 }
 
 .red-btn {
@@ -212,7 +221,6 @@ form textarea {
   font-size: 0.9rem;
   text-decoration: none;
   transition: background-color 0.3s ease, transform 0.1s;
-  margin: 0.5rem;
 }
 
 .blue-btn:hover {
@@ -233,8 +241,9 @@ button:active {
 
 .btn-container {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-evenly;
+  justify-content: space-between;
   flex-wrap: wrap;
+  gap: 0.5rem;
 }

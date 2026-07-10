@@ -6,7 +6,7 @@
 {% block title %} {{ event.event_name }} | Bristol Community Events {% endblock %} 
 
 {% block body %}
-<div class="content-container">
+<div class="create-container">
   <h1 class="title" style="display: flex;">{{ event.event_name }}</h1>
 
 
@@ -16,7 +16,7 @@
     <p><strong>Price:</strong> £{{ event.original_price }}</p>
     <p><strong>Venue:</strong> {{ event.location_name }}</p>
     <p><strong>Booking Deadline:</strong> {{ event.booking_deadline.strftime('%d %B %Y, %H:%M') }}</p>
-    {% if days_until_event <= 60 %}
+    {% if days_until_deadline <= 60 %}
     {% if event.conditions %}
     <p><strong>Conditions:</strong> {{ event.conditions }}</p>
     {% endif %}
@@ -40,13 +40,13 @@
   <a href="{{ url_for('auth.login') }}" class="blue-btn" style="text-decoration: none;">Log In to Book</a>
   {% else %}
   <form method="POST" action="{{ url_for('booking.book_event', event_id=event.event_id) }}">
-    <div style="margin-bottom: 15px;">
+    <div style="margin-bottom: 15px; display: flex; flex-direction: column; flex-wrap: wrap; max-width: 100%;">
       <label for="days_booked" style="font-weight: bold;">Number of Days:</label>
       <input type="number" name="days_booked" id="days_booked" min="1" max="{{total_event_days}}" value="1" required
         style="padding: 10px; width: 100px; margin-top: 5px; text-align: center;">
       <label for="attendee_name" style="font-weight: bold;">Attendee Name:</label>
       <input type="text" name="attendee_name" id="attendee_name" required
-        style="padding: 10px; width: 500px; margin-top: 5px; text-align: center;">
+        style="padding: 10px; max-width: 40%; margin-top: 5px; text-align: center;">
     </div>
 
     <div id="price-preview-box"
@@ -104,7 +104,7 @@
       htmlContent += `<p class="discount">You are about to book ${daysBooked} out ${totalEventDays} days.</p>`;
       htmlContent += `<p class="discount">(${daysBooked} / ${totalEventDays}) * £${basePrice.toFixed(2)} = £${finalPrice}</p>`;
       
-      applicableDiscounts.array.forEach(discount => {
+      applicableDiscounts.forEach(discount => {
         let decimal = discount.percent / 100.0;
         let amountDeducted = subtotal * decimal;
         finalPrice -= amountDeducted;

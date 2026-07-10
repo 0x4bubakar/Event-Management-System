@@ -38,7 +38,7 @@
             <td style="padding: 10px;"><span style="color: green; font-weight: bold;">{{ evt.tickets }} TICKETS AVAILABLE</span></td>
             <td style="padding: 10px; text-align: center;">0</td>
             {% endif %}
-            <td style="padding: 10px; display: flex; gap: 0.5rem;">
+            <td class="btn-container">
                 <a href="{{ url_for('org.org_edit_event', event_id=evt.event_id) }}" class="blue-btn" style="padding: 5px 10px; text-decoration: none; font-size: 0.9rem;">Edit</a>
                 <form method="POST" action="{{ url_for('admin.delete_event_route', event_id=evt.event_id) }}" style="margin: 0;">
                     <button type="submit" class="red-btn" style="padding: 5px 10px; font-size: 0.9rem;">Delete</button>

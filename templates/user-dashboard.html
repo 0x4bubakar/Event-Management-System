@@ -61,7 +61,7 @@
                     <th># of Days Booked</th>
                     <th>Booking Status</th>
                     <th>Price</th>
-                    <th colspan="2">Actions</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -73,10 +73,8 @@
                     <td>{{booking.days_booked}}</td>
                     <td>{{booking.booking_status}}</td>
                     <td>{{booking.final_price}}</td>
-                    <td>
+                    <td class="btn-container">
                         <a href="{{ url_for('invoices.download_receipt', booking_id=booking.booking_id) }}" class="blue-btn">View Receipt</a>
-                    </td>
-                    <td>
                     {% if booking.booking_status|lower != 'cancelled' %}
                     <form method="POST" action="{{ url_for('booking.cancel_booking_route', booking_id=booking.booking_id) }}" onsubmit="return confirm('Are you sure you want to cancel? Penalty fees may apply based on the event date.');">
                         <button type="submit" class="red-btn">Cancel</button>

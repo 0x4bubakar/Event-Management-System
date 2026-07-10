@@ -17,15 +17,15 @@
             <td>{{ user.name }}</td>
             <td>{{ user.email }}</td>
             <td>{{ user.role | capitalize }}</td>
-            <td>
-                <form method="POST" action="{{ url_for('admin.admin_update_password_route') }}" style="display: flex; gap: 10px;">
+            <td style="display: flex; flex-wrap: wrap; gap: 15px; align-items: center;">
+                <form method="POST" action="{{ url_for('admin.admin_update_password_route') }}" style="display: flex; gap: 5px; margin: 0; align-items: center;">
                     <input type="hidden" name="user_id" value="{{ user.user_id }}">
-                    <input type="password" name="new_password" placeholder="New Password" required style="padding: 5px;">
-                    <button type="submit" class="blue-btn" style="padding: 5px 10px;">Reset</button>
+                    <input type="password" name="new_password" placeholder="New Password" required style="padding: 5px; max-width: 50%; margin: 0;">
+                    <button type="submit" class="blue-btn" style="margin: 0;">Reset</button>
                 </form>
-                <form method="POST" action="{{ url_for('admin.admin_delete_account_route') }}" style="display: flex; gap: 10px;">
+                <form method="POST" action="{{ url_for('admin.admin_delete_account_route') }}">
                     <input type="hidden" name="user_id" value="{{ user.user_id }}">
-                    <button class="red-btn" type="submit">Delete account</button>
+                    <button class="red-btn" type="submit" style="margin: 0;">Delete account</button>
                 </form>
             </td>
         </tr>

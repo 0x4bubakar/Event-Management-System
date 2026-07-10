@@ -98,24 +98,24 @@ def get_applicable_discounts(event_id, days_until_event, is_student):
     try:
         # discounts that aren't event-specific (event_id is null)
         for discount_name in discounts_to_apply:
-            cursor.execute("SELECT discount_id, percent FROM discount WHERE name = %s and event_id IS NULL", (discount_name,)) # check the discounts exist in the discount table
+            cursor.execute("SELECT discount_id, name, percent FROM discount WHERE name = %s and event_id IS NULL", (discount_name,)) # check the discounts exist in the discount table
             record = cursor.fetchone()
             if record:
                 applicable_discounts.append({
                     "id": record['discount_id'],
                     "name": record['name'], 
-                    "percent": float(record['percent'])/100.0
+                    "percent": float(record['percent'])
                     })
         
         # event-specific discounts
-        cursor.execute("SELECT name, percent FROM discount WHERE event_id = %s", (event_id,))
+        cursor.execute("SELECT discount_id, name, percent FROM discount WHERE event_id = %s", (event_id,))
         event_discounts = cursor.fetchall()
 
         for d in event_discounts:
             applicable_discounts.append({
                 "id": d['discount_id'],
                 "name": d['name'],
-                "percent": float(d['percent'])/100.0
+                "percent": float(d['percent'])
                 })
         
         return applicable_discounts

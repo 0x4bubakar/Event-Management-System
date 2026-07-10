@@ -62,11 +62,11 @@ def create_booking(user_id, event_id, days_booked, attendee_name):
         
         discounts = get_applicable_discounts(event_id, days_until_event, is_student)
         for discount in discounts:
-            amount_deducted = booked_base_price * discount['percent']
+            amount_deducted = booked_base_price * (discount['percent'] / 100)
             cursor.execute("""
                 INSERT INTO booking_discounts (booking_id, discount_id, amount_deducted)
-                VALUES (%s, %s, %s)
-            """, booking_id, discount['discount_id'], amount_deducted)
+                VALUES (%s, %s, %s) 
+            """, (booking_id, discount['id'], amount_deducted))
 
             current_price -= amount_deducted
 
