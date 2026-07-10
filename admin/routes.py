@@ -1,7 +1,6 @@
 from flask import Blueprint, redirect, render_template, url_for, request, flash, session
 from utils.decorators import is_logged_in, is_admin
 from events.models import get_all_locations, get_all_categories, get_all_suitabilities, get_event_by_id, create_category, create_event, delete_event, create_location, edit_events, is_location_suitable, validate_event_dates, edit_location, get_location_by_id, add_last_minute_discount
-from reports.models import get_revenue_reports
 from .models import *
 from users.models import delete_account as db_delete_account
 from datetime import datetime

@@ -1,34 +1,43 @@
 {% extends "layout-admin.html" %}
-{% block page_header %}Reports{% endblock %}
+{% block page_header %}Generate Reports{% endblock %}
+
 {% block admin_content %}
-
-
-<section class="dash-section" style="text-align: center; background-color: #f0f8ff; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
-    <h2 style="margin: 0; color: #333;">Total Revenue</h2>
-    <h1 style="margin: 10px 0 0 0; color: #28a745; font-size: 3em;">£{{ "%.2f"|format(grand_total) }}</h1>
-</section>
-
 <section class="dash-section">
-    <h2 class="header-2">Revenue Breakdown by Event</h2>
-    {% if reports %}
-    <table>
-        <tr>
-            <th>Event Name</th>
-            <th>Date</th>
-            <th>Tickets Sold</th>
-            <th>Revenue Generated</th>
-        </tr>
-        {% for report in reports %}
-        <tr>
-            <td><strong>{{ report.event_name }}</strong></td>
-            <td>{{ report.start_date.strftime('%d %B %Y, %H:%M') }}</td>
-            <td>{{ report.total_bookings }}</td>
-            <td>£{{ "%.2f"|format(report.total_revenue) }}</td>
-        </tr>
-        {% endfor %}
-    </table>
-    {% else %}
-    <p>No events or revenue data found.</p>
-    {% endif %}
+    <div class="header-2">
+        <h2>Financial Reports</h2>
+    </div>
+    
+    <p>Use the form below to dynamically generate a PDF report. The report will include an annual revenue breakdown for the chosen year, alongside the top grossing events specifically for the chosen month.</p>
+
+    <div class="create-container">
+        <form method="POST" action="{{ url_for('reports.admin_reports') }}">
+            <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
+                <div class="create-group" style="flex: 1;">
+                    <label for="target_month">Target Month</label>
+                    <select id="target_month" name="target_month" class="admin-input" required>
+                        <option value="1" {% if current_month == 1 %}selected{% endif %}>January</option>
+                        <option value="2" {% if current_month == 2 %}selected{% endif %}>February</option>
+                        <option value="3" {% if current_month == 3 %}selected{% endif %}>March</option>
+                        <option value="4" {% if current_month == 4 %}selected{% endif %}>April</option>
+                        <option value="5" {% if current_month == 5 %}selected{% endif %}>May</option>
+                        <option value="6" {% if current_month == 6 %}selected{% endif %}>June</option>
+                        <option value="7" {% if current_month == 7 %}selected{% endif %}>July</option>
+                        <option value="8" {% if current_month == 8 %}selected{% endif %}>August</option>
+                        <option value="9" {% if current_month == 9 %}selected{% endif %}>September</option>
+                        <option value="10" {% if current_month == 10 %}selected{% endif %}>October</option>
+                        <option value="11" {% if current_month == 11 %}selected{% endif %}>November</option>
+                        <option value="12" {% if current_month == 12 %}selected{% endif %}>December</option>
+                    </select>
+                </div>
+
+                <div class="create-group" style="flex: 1;">
+                    <label for="target_year">Target Year</label>
+                    <input type="number" id="target_year" name="target_year" class="admin-input" min="2020" max="2100" value="{{ current_year }}" required>
+                </div>
+            </div>
+
+            <button type="submit" class="blue-btn" style="width: 100%;">Generate PDF Report</button>
+        </form>
+    </div>
 </section>
 {% endblock %}
