@@ -173,12 +173,21 @@ def delete_event(event_id):
     cursor = conn.cursor()
 
     try:
+        cursor.execute("""
+            DELETE c, bd FROM booking b
+            LEFT JOIN cancel c ON b.booking_id = c.booking_id
+            LEFT JOIN booking_discounts bd ON b.booking_id = bd.booking_id
+            WHERE b.event_id = %s
+        """, (event_id,))
+        cursor.execute("DELETE FROM booking WHERE event_id = %s", (event_id,))
+        cursor.execute("DELETE FROM discount WHERE event_id = %s", (event_id,))
         query = "DELETE FROM event WHERE event_id = %s"
         cursor.execute(query, (event_id,))
         conn.commit()
         return True
     
     except Exception as e:
+        conn.rollback()
         print(f"Error with deleting event: {str(e)}")
         return False
     
