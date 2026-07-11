@@ -96,13 +96,36 @@ def delete_account(target_user_id):
     cursor = conn.cursor()
 
     try:
-        query = "DELETE FROM user WHERE user_id = %s"
-        cursor.execute(query, (target_user_id,))
+        cursor.execute("""
+            DELETE c FROM cancel c
+            JOIN booking b on c.booking_id = b.booking_id
+            WHERE b.user_id = %s
+        """, (target_user_id,))
+
+        cursor.execute("""
+            DELETE bd FROM booking_discounts bd
+            JOIN booking b ON bd.booking_id = b.booking_id
+            WHERE b.user_id = %s
+        """, (target_user_id,))
+
+        cursor.execute("DELETE FROM booking WHERE user_id = %s", (target_user_id,))
+
+        # if they are an organiser, orphan events rather than delete them
+        cursor.execute("""
+            UPDATE event 
+            SET organiser_id = NULL 
+            WHERE organiser_id IN (SELECT organiser_id FROM organiser WHERE user_id = %s)
+        """, (target_user_id,))
+
+        cursor.execute("DELETE FROM organiser WHERE user_id = %s", (target_user_id,))
+
+        cursor.execute("DELETE FROM user WHERE user_id = %s", (target_user_id,))
         conn.commit()
         return True
     
     except Exception as e:
         conn.rollback()
+        print(f"Error deleting user: {e}")
         return False
     
     finally:
