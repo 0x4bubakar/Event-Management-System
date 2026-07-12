@@ -21,7 +21,7 @@ def create_booking(user_id, event_id, days_booked, attendee_name):
     
     try:
         query = """
-            SELECT e.original_price, e.start_date, e.end_date, e.booking_deadline, l.capacity,
+            SELECT e.original_price, e.start_date, e.end_date, e.booking_deadline, l.capacity, e.tickets,
             (SELECT COUNT(*) FROM booking b WHERE b.event_id = e.event_id AND b.status='confirmed') AS tickets_sold
             FROM event e
             JOIN location l on e.location_id = l.location_id
@@ -42,7 +42,7 @@ def create_booking(user_id, event_id, days_booked, attendee_name):
         if now > event['booking_deadline']:
             return False, "The booking deadline has passed."
         
-        if event['tickets_sold'] >= event['capacity']:
+        if event['tickets_sold'] >= event['tickets']:
             status = "waitlisted"
         else:
             status = 'confirmed'

@@ -70,8 +70,7 @@ def receipt(booked_on, booking_id, attendee_name, event_name, days_booked, disco
     for discount in discounts:
         discount_name = discount['name']
         percent = discount['percent']
-        amount_deducted = discount['amount']
-
+        amount_deducted = discount['amount_deducted']
         story.append(Paragraph(f"{discount_name} ({percent}% off): -£{amount_deducted:.2f}", normal))
 
     story.append(Spacer(1,5*mm))

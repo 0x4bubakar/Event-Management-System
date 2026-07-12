@@ -21,7 +21,7 @@ def events():
 def event_details(event_id):
     event = get_event_by_id(event_id)
     total_event_days = (event['end_date'].date() - event['start_date'].date()).days + 1
-    tickets_left = event['capacity'] - event['tickets_sold']
+    tickets_left = event['tickets'] - event['tickets_sold']
     is_sold_out = tickets_left <= 0
     status = event['status']
 

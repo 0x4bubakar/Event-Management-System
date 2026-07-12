@@ -112,7 +112,7 @@ def edit_event_route(event_id):
             else:
                 flash("The discount must be at least 25%.", "flash-error")
 
-            return redirect(url_for('admin.edit_event_route', event_id=event_id))
+            return redirect('admin.edit_event_route')
 
         event_name = request.form.get("event_name")
         category_id = request.form.get("category_id")
